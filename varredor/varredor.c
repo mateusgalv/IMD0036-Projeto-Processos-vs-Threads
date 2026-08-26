@@ -2,6 +2,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+int MATRICULA = 007273;
+
 bool isEven(int number) {
     if (number%2 == 0) {
         return true;
@@ -31,18 +33,41 @@ int contarPassos(int number) {
     return 0;
 }
 
+// ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
 int main(int argc, char *argv[]) {
-    int A, B;
+    int A, B, W;
     
     A = atoi(argv[1]);
     B = atoi(argv[2]);
+    W = atoi(argv[3]);
 
+    if (A <= 0 || B <= 0 || B < A) {
+        // validação argumentos <A> <B>
+        printf("O intervalo [%d, %d] é inválido\n", A, B);
+        return 0;
+    } else if (W < 1) {
+        // validação argumento <W>
+        printf("Numero de threads/processos %d é inválido\n", W);
+        return 0;
+    }
+    
+    // A = A + MATRICULA;
     printf(" -> Intervalo [%d,%d]\n", A, B);
     
-    for(int i = A; i <= B; i++) {
-        contarPassos(i);   
+    if (W == 1) {
+        // Sequencial
+        printf(" -> W = 1 - Execução sequencial\n");
+        
+        for(int i = A; i <= B; i++) {
+            contarPassos(i);   
+        }
+        
+    } else {
+        // bloco ou ciclico
+        printf(" -> W = %d - Execução não sequencial\n", W);
     }
+
     return 0;
 }
 
-// gcc varredor.c -o varredor && ./varredor 10 12
+// gcc varredor.c -o varredor && ./varredor 10 12 1
