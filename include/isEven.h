@@ -2,7 +2,8 @@
 #define ISEVEN_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
-bool isEven(int number); 
+bool isEven(int64_t); 
 
 #endif

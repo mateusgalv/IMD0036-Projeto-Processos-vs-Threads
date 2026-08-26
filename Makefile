@@ -7,7 +7,13 @@ LDFLAGS = -pthread
 SRC_DIR = src
 BUILD_DIR = build
 
-ARGS = 10 12 1
+# SEQUENCIAL
+# ARGS = 100000000 100000100 1 processo
+
+# BLOCOS + PROCESSOS
+ARGS = 100007273 8000000000 3 processo
+
+# CICLICO + PROCESSOS
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))

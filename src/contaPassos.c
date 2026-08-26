@@ -1,21 +1,24 @@
+#include <stdio.h>
+#include <stdint.h>
+
 #include "isEven.h"
 
-int contaPassos(int number) {
-    int cont = 0;
+int64_t contaPassos(int64_t number) {
+    int64_t cont = 0;
 
-    printf("Numero = %d - ", number);
+    printf("Numero = %lld - ", (long long)number);
 
     while (number != 1) {
 
         if (isEven(number)) {
-            number = number/2;
+            number = (number / 2);
         } else {
-            number = (number*3)+1;
+            number = (number * 3) + 1;
         }
 
         cont++;
     }
     
-    printf("Passos = %d\n", cont);
+    printf("Passos = %lld\n", (long long)cont);
     return cont;
 }

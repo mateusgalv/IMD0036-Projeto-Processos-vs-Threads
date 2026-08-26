@@ -1,49 +1,62 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
 
 #include "isEven.h"
 #include "contaPassos.h"
+#include "ceilDivision.h"
 
-int MATRICULA = 007273;
+// MATRICULA = 007273;
+// A = 100.007.273 -> B = 8.000.000.000
 
 // ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
 int main(int argc, char *argv[]) {
     (void)argc;
 
-    int A, B, W;
+    int64_t a, b, length, blockSize;
+    int w;
     
-    A = atoi(argv[1]);
-    B = atoi(argv[2]);
-    W = atoi(argv[3]);
+    a = (int64_t)strtoll(argv[1], NULL, 10);
+    b = (int64_t)strtoll(argv[2], NULL, 10);
+    w = (int64_t)strtoll(argv[3], NULL, 10);
 
-    if (A <= 0 || B <= 0 || B < A) {
-        // validação argumentos <A> <B>
-        printf("O intervalo [%d, %d] é inválido\n", A, B);
+    // INICIO VALIDAÇÃO
+    if (a <= 0 || b <= 0 || b < a) {
+        // validação argumentos <A> e <B>
+        printf("O intervalo [%lld, %lld] é inválido\n", (long long)a, (long long)b);
         return 0;
-    } else if (W < 1) {
+    } else if (w < 1 || w > 8) {
         // validação argumento <W>
+        printf("Número de processos inválido, -> uso intervalo [1,8]\n");
+        return 0;
+    } else if (strcmp(argv[4], "processo") != 0) {
+        // validação argumento <modo>
         printf("Modo de processamento inválido\n");
         return 0;
     }
-    
-    // A = A + MATRICULA;
-    printf(" -> Intervalo [%d,%d]\n", A, B);
-    
-    if (W == 1) {
-        // Sequencial
+    // FIM VALIDAÇÃO
+
+    printf(" -> Intervalo [%lld,%lld]\n", (long long)a, (long long)b);
+
+    if (w == 1) {
+        // Contagem sequencial
         printf(" -> W = 1 - Execução sequencial\n");
         
-        for(int i = A; i <= B; i++) {
-            contaPassos(i);   
+        for(int64_t i = a; i <= b; i++) {
+            contaPassos(i);
         }
-         
-    } else {
-        // bloco ou ciclico
-        printf(" -> W = %d - Execução não sequencial\n", W);
-    }
 
+        return 0;
+    } 
+
+    printf(" -> W = %d - Execução não sequencial\n", w);
+    length = b - a + 1;
+    printf(" -> Comprimento = %lld\n", (long long)length);
+
+    blockSize = ceilDivision(length, w);
+    printf(" -> Tamanho arredondado dos blocos = %lld\n", (long long)blockSize);
+ 
     return 0;
 }
-
-// gcc varredor.c -o varredor && ./varredor 10 12 1

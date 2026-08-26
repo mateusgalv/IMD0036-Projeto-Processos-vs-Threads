@@ -1,6 +1,8 @@
 #ifndef CONTAPASSOS_H
 #define CONTAPASSOS_H
 
-int contaPassos(int number);
+#include <stdint.h>
+
+int64_t contaPassos(int64_t);
 
 #endif
