@@ -2,15 +2,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-int MATRICULA = 007273;
+#include "isEven.h"
 
-bool isEven(int number) {
-    if (number%2 == 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
+int MATRICULA = 007273;
 
 int contarPassos(int number) {
     int cont = 0;
@@ -35,6 +29,8 @@ int contarPassos(int number) {
 
 // ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
 int main(int argc, char *argv[]) {
+    (void)argc;
+
     int A, B, W;
     
     A = atoi(argv[1]);
@@ -47,7 +43,7 @@ int main(int argc, char *argv[]) {
         return 0;
     } else if (W < 1) {
         // validação argumento <W>
-        printf("Numero de threads/processos %d é inválido\n", W);
+        printf("Modo de processamento inválido\n");
         return 0;
     }
     
@@ -61,7 +57,7 @@ int main(int argc, char *argv[]) {
         for(int i = A; i <= B; i++) {
             contarPassos(i);   
         }
-        
+         
     } else {
         // bloco ou ciclico
         printf(" -> W = %d - Execução não sequencial\n", W);
