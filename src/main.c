@@ -35,6 +35,10 @@ int main(int argc, char *argv[]) {
         // validação argumento <modo>
         printf("Modo de processamento inválido\n");
         return 0;
+    } else if (strcmp(argv[5], "bloco") != 0) {
+        // validação argumento <particao>
+        printf("Partição inválida\n");
+        return 0;
     }
     // FIM VALIDAÇÃO
 
@@ -57,6 +61,21 @@ int main(int argc, char *argv[]) {
 
     blockSize = ceilDivision(length, w);
     printf(" -> Tamanho arredondado dos blocos = %lld\n", (long long)blockSize);
+    
+    int64_t blockStart, blockEnd;
+
+    blockStart = a;
+    blockEnd = a + blockSize;
+
+    for(int j = 0; j < w; j++) {
+        printf(" -> Bloco %d\n", j);
+        printf("----> Intervalo: [%lld, %lld]\n", (long long)blockStart, (long long)blockEnd);
+
+        blockStart = blockEnd + 1;
+        
+        blockEnd = blockEnd + blockSize;
+        if (blockEnd > b) blockEnd = b;
+    }
  
     return 0;
 }
