@@ -3,29 +3,9 @@
 #include <stdlib.h>
 
 #include "isEven.h"
+#include "contaPassos.h"
 
 int MATRICULA = 007273;
-
-int contarPassos(int number) {
-    int cont = 0;
-
-    printf("Numero = %d - ", number);
-
-    while (number != 1) {
-
-        if (isEven(number)) {
-            number = number/2;
-        } else {
-            number = (number*3)+1;
-        }
-
-        cont ++;
-    }
-
-    printf("Passos = %d\n", cont);
-
-    return 0;
-}
 
 // ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
 int main(int argc, char *argv[]) {
@@ -55,7 +35,7 @@ int main(int argc, char *argv[]) {
         printf(" -> W = 1 - Execução sequencial\n");
         
         for(int i = A; i <= B; i++) {
-            contarPassos(i);   
+            contaPassos(i);   
         }
          
     } else {
