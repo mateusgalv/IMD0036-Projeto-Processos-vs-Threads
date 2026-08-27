@@ -6,6 +6,7 @@ LDFLAGS = -pthread
 
 SRC_DIR = src
 BUILD_DIR = build
+TEMP_DIR = temp
 
 # SEQUENCIAL
 # ARGS = 100000000 100000100 1 processo bloco
@@ -29,12 +30,13 @@ $(TARGET): $(OBJS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(TEMP_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: all
 	@./$(TARGET) $(ARGS)
 
 clean:
-	rm -rf $(BUILD_DIR) bin
+	rm -rf $(BUILD_DIR) $(TEMP_DIR) bin
 
 .PHONY: all run clean

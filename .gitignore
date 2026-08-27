@@ -1,5 +1,6 @@
 build/
 bin/
+temp/
 
 *.o
 *.obj
@@ -8,6 +9,8 @@ bin/
 *.so
 *.dll
 *.dylib
+
+*.txt
 
 *.exe
 *.out
