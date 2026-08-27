@@ -44,12 +44,11 @@ int main(int argc, char *argv[]) {
     } 
 
     // PROCESSOS OU THREADS
-
+    // PROCESSO
     if (strcmp(argv[4], "processo") == 0) {
-        // PROCESSO
         
+        // BLOCO
         if (strcmp(argv[5], "bloco")== 0) {
-            // BLOCO
 
             length = b - a + 1;
             blockSize = ceilDivision(length, w);
@@ -105,35 +104,35 @@ int main(int argc, char *argv[]) {
             for(int k = 0; k < w; k++) {
                 // PROCESSO PAI AGUARDANDO FILHOS
                 wait(NULL);
-                printf("PROCESSO FILHO ACABOU (%d/%d)\n", k+1, w);
+                // printf("PROCESSO FILHO ACABOU (%d/%d)\n", k+1, w);
             }
 
-        } else {
-            // CICLICO
+        }
+        
+        // CICLICO
+        if (strcmp(argv[5], "ciclico")== 0) {
+            
+            for(int i = 0; i < w; i++) {
+                pid_t pid = fork();
+                if (pid != 0) printf(" --> Filho %d - PID: %d criado\n", i, pid);
+
+                if (pid == 0) {
+                    // PROCESSO FILHO
+                    int64_t steps = 0;
+
+                    for(int64_t number = i + a; number <= b; number += w) {
+                        steps += stepsCount(number);
+                    }
+                    printf(" ---> Filho %d -> Passos = %lld\n", i, (long long)steps);
+                
+                    exit(0);
+                }
+            }
         }
     } 
     
-    if (strcmp(argv[4], "thread") == 0) {
-            // THREADS
-    }
-    
-    
-    
-    
-    // BLOCOS OU CICLICA
-    
-    
-
-    // logica p/ PROCESSO + BLOCOS
-    
-
-    
-
-    
-
-
-
-
+    // THREADS
+    if (strcmp(argv[4], "thread") == 0) {}
 
     return 0;
 }

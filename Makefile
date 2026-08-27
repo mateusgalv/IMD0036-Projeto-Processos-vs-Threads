@@ -16,6 +16,9 @@ TEMP_DIR = temp
 ARGS = 100007273 100007373 7 processo bloco
 
 # CICLICO + PROCESSOS
+# ARGS = 100007273 8000000000 8 processo ciclico
+# ARGS = 100007273 100007373 7 processo ciclico
+
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
