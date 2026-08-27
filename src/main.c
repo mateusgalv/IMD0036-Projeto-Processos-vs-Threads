@@ -118,13 +118,37 @@ int main(int argc, char *argv[]) {
 
                 if (pid == 0) {
                     // PROCESSO FILHO
-                    int64_t steps = 0;
+                    struct timespec start, end;
+                    int64_t steps = 0, elapsed;
 
+                    char path[32];
+
+                    // -----> CONTAGEM DE TEMPO INICIO
+                    clock_gettime(CLOCK_MONOTONIC, &start);
+
+                    // -----> CONTAGEM DE PASSOS
                     for(int64_t number = i + a; number <= b; number += w) {
                         steps += stepsCount(number);
                     }
                     printf(" ---> Filho %d -> Passos = %lld\n", i, (long long)steps);
-                
+                    
+                    // -----> CONTAGEM DE TEMPO FIM
+                    clock_gettime(CLOCK_MONOTONIC, &end);
+                    elapsed = (end.tv_sec - start.tv_sec) * INT64_C(1000000000) + 
+                    (end.tv_nsec - start.tv_nsec);
+                    printf(" ---> Filho %d -> TEMPO: %lld nanosegundos\n", i, (long long)elapsed);
+                    
+                    // -----> ESCREVER ARQUIVO
+                    snprintf(path, sizeof(path), "temp/parcial_%d.txt", i);
+
+                    FILE *file = fopen(path, "w");
+
+                    if (file == NULL) exit(-1); 
+
+                    fprintf(file, "%lld\n", (long long)elapsed);
+
+                    fclose(file);
+
                     exit(0);
                 }
             }
