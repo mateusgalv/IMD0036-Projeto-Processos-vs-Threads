@@ -1,9 +1,12 @@
+#define _POSIX_C_SOURCE 199309L
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -26,31 +29,12 @@ int main(int argc, char *argv[]) {
     b = (int64_t)strtoll(argv[2], NULL, 10);
     w = (int64_t)strtoll(argv[3], NULL, 10);
 
-    // INICIO VALIDAÇÃO
-    if (a <= 0 || b <= 0 || b < a) {
-        // validação argumentos <A> e <B>
-        printf("O intervalo [%lld, %lld] é inválido\n", (long long)a, (long long)b);
-        return 0;
-    } else if (w < 1 || w > 8) {
-        // validação argumento <W>
-        printf("Número de processos inválido, -> uso intervalo [1,8]\n");
-        return 0;
-    } else if (strcmp(argv[4], "processo") != 0) {
-        // validação argumento <modo>
-        printf("Modo de processamento inválido\n");
-        return 0;
-    } else if (strcmp(argv[5], "bloco") != 0) {
-        // validação argumento <particao>
-        printf("Partição inválida\n");
-        return 0;
-    }
-    // FIM VALIDAÇÃO
-
     printf(" -> Intervalo [%lld,%lld]\n", (long long)a, (long long)b);
+    printf(" -> W = %d, Modo: %s, Particao: %s\n", w, argv[4], argv[5]);
 
+    // SEQUENCIAL
     if (w == 1) {
-        // Contagem sequencial
-        printf(" -> W = 1 - Execução sequencial\n");
+        printf(" --> Execução sequencial:\n");
         
         for(int64_t i = a; i <= b; i++) {
             stepsCount(i);
@@ -59,42 +43,81 @@ int main(int argc, char *argv[]) {
         return 0;
     } 
 
-    printf(" -> W = %d - Execução não sequencial\n", w);
-    length = b - a + 1;
-    printf(" -> Comprimento = %lld\n", (long long)length);
+    // PROCESSOS OU THREADS
 
-    blockSize = ceilDivision(length, w);
-    printf(" -> Tamanho arredondado dos blocos = %lld\n", (long long)blockSize);
+    if (strcmp(argv[4], "processo") == 0) {
+        // PROCESSO
+        
+        if (strcmp(argv[5], "bloco")== 0) {
+            // BLOCO
+
+            length = b - a + 1;
+            blockSize = ceilDivision(length, w);
+            printf(" -> Tamanho dos blocos = %lld\n", (long long)blockSize);
+
+            int64_t blockStart, blockEnd, steps;
+            blockStart = a;
+            blockEnd = a + blockSize;
+
+            for(int j = 0; j < w; j++) {
+                pid_t pid = fork();
+                if (pid != 0) printf(" --> Filho %d - PID: %d criado\n", j, pid);
+        
+                if (pid == 0) {
+                    // PROCESSO FILHO
+
+                    // -----> CONTAGEM DE TEMPO
+                    struct timespec start, end;
+                    int64_t elapsed;
+                    clock_gettime(CLOCK_MONOTONIC, &start);
+                    
+                    // -----> CONTAGEM DE PASSOS
+                    steps = intervalCount(blockStart, blockEnd);
+                    printf(" ---> Filho %d -> [%lld, %lld] -> %lld passos\n", j, (long long)blockStart, (long long)blockEnd, (long long)steps);
+                
+                    // -----> CALCULO DE TEMPO PASSADO
+                    clock_gettime(CLOCK_MONOTONIC, &end);
+                    elapsed = (end.tv_sec - start.tv_sec) * INT64_C(1000000000) + 
+                        (end.tv_nsec - start.tv_nsec);
+                    printf(" ---> Filho %d -> TEMPO: %lld nanosegundos\n", j, (long long)elapsed);
+
+                    // -----> ESCREVER ARQUIVO
+                    exit(0);
+                }
+
+                blockStart = blockEnd + 1;
+                blockEnd = blockEnd + blockSize;
+                if (blockEnd > b) blockEnd = b;
+            }
+
+            for(int k = 0; k < w; k++) {
+                // PROCESSO PAI AGUARDANDO FILHOS
+                wait(NULL);
+                printf("PROCESSO FILHO ACABOU (%d/%d)\n", k+1, w);
+            }
+
+        } else {
+            // CICLICO
+        }
+    } 
+    
+    if (strcmp(argv[4], "thread") == 0) {
+            // THREADS
+    }
+    
+    
+    
+    
+    // BLOCOS OU CICLICA
+    
+    
 
     // logica p/ PROCESSO + BLOCOS
-    int64_t blockStart, blockEnd, steps;
+    
 
-    blockStart = a;
-    blockEnd = a + blockSize;
+    
 
-    for(int j = 0; j < w; j++) {
-        // printf(" -> Bloco %d\n", j);
-        // printf("----> Intervalo: [%lld, %lld]\n", (long long)blockStart, (long long)blockEnd);
-
-        
-        pid_t pid = fork();
-        if (pid != 0) printf(" --> Filho %d - PID: %d criado\n", j, pid);
-        if (pid == 0) {
-            // FILHO
-            steps = intervalCount(blockStart, blockEnd);
-            printf(" ---> Filho %d -> [%lld, %lld] -> %lld passos\n", j, (long long)blockStart, (long long)blockEnd, (long long)steps);
-            exit(0);
-        }
-
-        blockStart = blockEnd + 1;
-        blockEnd = blockEnd + blockSize;
-        if (blockEnd > b) blockEnd = b;
-    }
-
-    for(int k = 0; k < w; k++) {
-        wait(NULL);
-        printf("UM PROCESSO FILHO ACABOU \n");
-    }
+    
 
 
 
