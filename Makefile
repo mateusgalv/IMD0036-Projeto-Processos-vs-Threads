@@ -13,11 +13,11 @@ TEMP_DIR = temp
 
 # BLOCOS + PROCESSOS
 # ARGS = 100007273 8000000000 8 processo bloco
-# ARGS = 100007273 100007373 7 processo bloco
+ARGS = 100007273 100007373 7 processo bloco
 
 # CICLICO + PROCESSOS
 # ARGS = 100007273 8000000000 8 processo ciclico
-ARGS = 100007273 100007373 7 processo ciclico
+# ARGS = 100007273 100007373 7 processo ciclico
 
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)

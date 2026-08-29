@@ -14,84 +14,109 @@
 #include "stepsCount.h"
 #include "ceilDivision.h"
 #include "intervalCount.h"
+#include "timer.h"
 
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
+
+void report(const int id, const long long *steps, const long long *time) {
+    char path[32];
+    snprintf(path, sizeof(path), "temp/parcial_%d.txt", id);
+    FILE *file = fopen(path, "w");
+
+    if (file == NULL) exit(-1);
+
+    fprintf(file, "%lld %lld\n", *steps, *time);
+
+    fclose(file);
+}
+
+void result(const char *modo,
+    const char *particao,
+    const int w,
+    const long long *l,
+    const long long *time,
+    const long long *maxTime,
+    const long long *minTime,
+    const long long *agregationTime
+) {
+    char path[32];
+    snprintf(path, sizeof(path), "output/arquivo_saida.txt");
+    
+    FILE *file = fopen(path, "w");
+    if (file == NULL) exit(-1);
+    
+    // modo,particao,W,L,tempo_total,tempo_max_filho,tempo_min_filho,tempo_agregacao
+    fprintf(file, "%s,%s,%d,%lld,%lld,%lld,%lld,%lld\n",
+        modo, particao, w, *l, *time, *maxTime, *minTime, *agregationTime);
+
+    fclose(file);
+}
+
 
 // ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
 int main(int argc, char *argv[]) {
     (void)argc;
 
-    int64_t a, b, length, blockSize;
+    long long a, b;
     int w;
+    struct timespec mainTimer;
+    clock_gettime(CLOCK_MONOTONIC, &mainTimer);
     
-    a = (int64_t)strtoll(argv[1], NULL, 10);
-    b = (int64_t)strtoll(argv[2], NULL, 10);
-    w = (int64_t)strtoll(argv[3], NULL, 10);
+    a = strtoll(argv[1], NULL, 10);
+    b = strtoll(argv[2], NULL, 10);
+    w = strtoll(argv[3], NULL, 10);
 
-    printf(" -> Intervalo [%lld,%lld]\n", (long long)a, (long long)b);
+    printf(" -> Intervalo [%lld,%lld]\n", a, b);
     printf(" -> W = %d, Modo: %s, Particao: %s\n", w, argv[4], argv[5]);
 
     // SEQUENCIAL
     if (w == 1) {
         printf(" --> Execução sequencial:\n");
         
-        for(int64_t i = a; i <= b; i++) {
+        for(long long i = a; i <= b; i++) {
             stepsCount(i);
         }
 
-        return 0;
     } 
 
-    // PROCESSOS OU THREADS
-    // PROCESSO
+    // PROCESSOS
     if (strcmp(argv[4], "processo") == 0) {
         
         // BLOCO
         if (strcmp(argv[5], "bloco")== 0) {
-
+            long long length, blockSize, blockStart, blockEnd, steps;
+            
             length = b - a + 1;
             blockSize = ceilDivision(length, w);
-            printf(" -> Tamanho dos blocos = %lld\n", (long long)blockSize);
+            printf(" -> Tamanho dos blocos = %lld\n", blockSize);
 
-            int64_t blockStart, blockEnd, steps;
             blockStart = a;
             blockEnd = a + blockSize;
 
-            for(int j = 0; j < w; j++) {
+            for(int i = 0; i < w; i++) {
                 pid_t pid = fork();
-                if (pid != 0) printf(" --> Filho %d - PID: %d criado\n", j, pid);
+                if (pid != 0) printf(" --> Filho %d - PID: %d criado\n", i, pid);
         
                 if (pid == 0) {
                     // PROCESSO FILHO
                     struct timespec start, end;
-                    int64_t elapsed;
-                    
-                    char path[32];
+                    long long time;
 
                     // -----> CONTAGEM DE TEMPO INICIO
                     clock_gettime(CLOCK_MONOTONIC, &start);
                     
-                    // -----> CONTAGEM DE PASSOS
+                    // -----> CONTAGEM DE PASSOS 
                     steps = intervalCount(blockStart, blockEnd);
-                    printf(" ---> Filho %d -> [%lld, %lld] -> %lld passos\n", j, (long long)blockStart, (long long)blockEnd, (long long)steps);
+                    printf(" ---> Filho %d -> [%lld, %lld] -> %lld passos\n", i, blockStart, blockEnd, steps);
                 
                     // -----> CONTAGEM DE TEMPO FIM
                     clock_gettime(CLOCK_MONOTONIC, &end);
-                    elapsed = (end.tv_sec - start.tv_sec) * INT64_C(1000000000) + 
-                    (end.tv_nsec - start.tv_nsec);
-                    printf(" ---> Filho %d -> TEMPO: %lld nanosegundos\n", j, (long long)elapsed);
+                    time = timer(&start, &end);
+                    printf(" ---> Filho %d -> TEMPO: %lld nanosegundos\n", i, time);
                     
                     // -----> ESCREVER ARQUIVO
-                    snprintf(path, sizeof(path), "temp/parcial_%d.txt", j);
-
-                    FILE *file = fopen(path, "w");
-
-                    if (file == NULL) exit(-1); 
-
-                    fprintf(file, "%lld\n", (long long)elapsed);
-
-                    fclose(file);
+                    report(i, &steps, &time);
 
                     exit(0);               
                 }
@@ -101,11 +126,12 @@ int main(int argc, char *argv[]) {
                 if (blockEnd > b) blockEnd = b;
             }
 
-            for(int k = 0; k < w; k++) {
-                // PROCESSO PAI AGUARDANDO FILHOS
+            // PROCESSO PAI
+            for(int j = 0; j < w; j++) {
+                // -----> ESPERA OS FILHOS ENCERRAREM
                 wait(NULL);
-                // printf("PROCESSO FILHO ACABOU (%d/%d)\n", k+1, w);
             }
+
 
         }
         
@@ -119,35 +145,24 @@ int main(int argc, char *argv[]) {
                 if (pid == 0) {
                     // PROCESSO FILHO
                     struct timespec start, end;
-                    int64_t steps = 0, elapsed;
-
-                    char path[32];
+                    long long steps = 0, time;
 
                     // -----> CONTAGEM DE TEMPO INICIO
                     clock_gettime(CLOCK_MONOTONIC, &start);
 
                     // -----> CONTAGEM DE PASSOS
-                    for(int64_t number = i + a; number <= b; number += w) {
+                    for(long long number = i + a; number <= b; number += w) {
                         steps += stepsCount(number);
                     }
-                    printf(" ---> Filho %d -> Passos = %lld\n", i, (long long)steps);
+                    printf(" ---> Filho %d -> Passos = %lld\n", i, steps);
                     
                     // -----> CONTAGEM DE TEMPO FIM
                     clock_gettime(CLOCK_MONOTONIC, &end);
-                    elapsed = (end.tv_sec - start.tv_sec) * INT64_C(1000000000) + 
-                    (end.tv_nsec - start.tv_nsec);
-                    printf(" ---> Filho %d -> TEMPO: %lld nanosegundos\n", i, (long long)elapsed);
+                    time = timer(&start, &end);
+                    printf(" ---> Filho %d -> TEMPO: %lld nanosegundos\n", i, time);
                     
                     // -----> ESCREVER ARQUIVO
-                    snprintf(path, sizeof(path), "temp/parcial_%d.txt", i);
-
-                    FILE *file = fopen(path, "w");
-
-                    if (file == NULL) exit(-1); 
-
-                    fprintf(file, "%lld\n", (long long)elapsed);
-
-                    fclose(file);
+                    report(i, &steps, &time);
 
                     exit(0);
                 }
