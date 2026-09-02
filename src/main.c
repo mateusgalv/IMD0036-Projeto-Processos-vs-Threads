@@ -21,7 +21,9 @@
 
 void report(const int id, const long long *steps, const long long *time) {
     char path[32];
+    
     snprintf(path, sizeof(path), "temp/parcial_%d.txt", id);
+    
     FILE *file = fopen(path, "w");
 
     if (file == NULL) exit(-1);
@@ -31,53 +33,70 @@ void report(const int id, const long long *steps, const long long *time) {
     fclose(file);
 }
 
-void result(const char *modo,
-    const char *particao,
+void createOutputFile(const char modo,
+    const char particao,
     const int w,
-    const long long *l,
-    const long long *time,
-    const long long *maxTime,
-    const long long *minTime,
-    const long long *agregationTime
+    const long long l,
+    const char time,
+    const char maxTime,
+    const char minTime,
+    const char agregationTime,
+    const char fileName
 ) {
     char path[32];
-    snprintf(path, sizeof(path), "output/arquivo_saida.txt");
+
+    snprintf(path, sizeof(path), "output/%s.txt", fileName);
     
     FILE *file = fopen(path, "w");
     if (file == NULL) exit(-1);
     
-    // modo,particao,W,L,tempo_total,tempo_max_filho,tempo_min_filho,tempo_agregacao
-    fprintf(file, "%s,%s,%d,%lld,%lld,%lld,%lld,%lld\n",
-        modo, particao, w, *l, *time, *maxTime, *minTime, *agregationTime);
+    fprintf(file,
+        "%s,%s,%d,%lld,%s,%s,%s,%s\n",
+        modo, particao, w, l, time, maxTime, minTime, agregationTime
+    );
 
     fclose(file);
 }
 
-
-// ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
+/*
+./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
+            1   2   3    4         5             6
+*/
 int main(int argc, char *argv[]) {
     (void)argc;
 
-    long long a, b;
+    long long a, b, l, time;
     int w;
-    struct timespec mainTimer;
-    clock_gettime(CLOCK_MONOTONIC, &mainTimer);
+    struct timespec start, end;
+    char timeStr[32];
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
     
     a = strtoll(argv[1], NULL, 10);
     b = strtoll(argv[2], NULL, 10);
     w = strtoll(argv[3], NULL, 10);
+    l = b - a + 1;
 
-    printf(" -> Intervalo [%lld,%lld]\n", a, b);
-    printf(" -> W = %d, Modo: %s, Particao: %s\n", w, argv[4], argv[5]);
+    printf(" -> Intervalo [%lld,%lld]\n -> L = %lld\n", a, b, l);
 
     // SEQUENCIAL
     if (w == 1) {
-        printf(" --> Execução sequencial:\n");
+        printf(" --> Execução sequencial (w = 1)\n");
         
         for(long long i = a; i <= b; i++) {
             stepsCount(i);
         }
 
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        time = timer(&start, &end);
+        snprintf(timeStr, sizeof(timeStr), "%.2e", (double)time);
+        
+        // printf("Tempo: %lld ns ou %.2e s\n", time, (double)time);
+        
+        // sequencial,-1,w,l,timeStr,-1,-1,-1
+        // criar arquivo
+
+        return 0;
     } 
 
     // PROCESSOS

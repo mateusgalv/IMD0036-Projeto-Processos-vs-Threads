@@ -9,11 +9,11 @@ BUILD_DIR = build
 TEMP_DIR = temp
 
 # SEQUENCIAL
-# ARGS = 100000000 100000100 1 processo bloco
+ARGS = 100000000 100000100 1
 
 # BLOCOS + PROCESSOS
 # ARGS = 100007273 8000000000 8 processo bloco
-ARGS = 100007273 100007373 7 processo bloco
+# ARGS = 100007273 100007373 7 processo bloco
 
 # CICLICO + PROCESSOS
 # ARGS = 100007273 8000000000 8 processo ciclico
@@ -29,17 +29,17 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	@mkdir -p bin
-	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
+	@$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(TEMP_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 run: all
-	@./$(TARGET) $(ARGS)
+	./$(TARGET) $(ARGS)
 
 clean:
-	rm -rf $(BUILD_DIR) $(TEMP_DIR) bin
+	@rm -rf $(BUILD_DIR) $(TEMP_DIR) bin
 
 .PHONY: all run clean
