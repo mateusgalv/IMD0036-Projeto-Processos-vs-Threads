@@ -3,6 +3,6 @@
 
 #include "isEven.h"
 
-bool isEven(int64_t number) {
+bool isEven(long long number) {
     return (number % 2) == 0;
 }

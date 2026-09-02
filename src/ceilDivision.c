@@ -2,6 +2,6 @@
 
 #include "ceilDivision.h"
 
-int64_t ceilDivision(int64_t l, int w) {
+long long ceilDivision(long long l, int w) {
     return (l + w - 1)/w;
 }

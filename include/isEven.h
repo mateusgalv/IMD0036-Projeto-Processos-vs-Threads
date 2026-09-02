@@ -4,6 +4,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-bool isEven(int64_t); 
+bool isEven(long long); 
 
 #endif

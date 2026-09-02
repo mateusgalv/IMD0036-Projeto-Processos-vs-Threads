@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-int64_t ceilDivision(int64_t, int);
+long long ceilDivision(long long, int);
 
 #endif

@@ -3,8 +3,8 @@
 
 #include "isEven.h"
 
-int64_t stepsCount(int64_t number) {
-    int64_t count = 0;
+long long stepsCount(long long number) {
+    long long count = 0;
 
     // printf("Numero = %lld - ", (long long)number);
 

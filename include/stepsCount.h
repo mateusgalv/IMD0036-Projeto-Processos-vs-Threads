@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-int64_t stepsCount(int64_t);
+long long stepsCount(long long num);
 
 #endif
