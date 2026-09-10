@@ -1,13 +1,7 @@
 #define _POSIX_C_SOURCE 199309L
 
 #include <time.h>
-
-typedef struct {
-    int threadId;
-    long long start;
-    long long end;
-    long long time;
-} ThreadArgs;
+#include "ThreadArgs.h"
 
 void *useThread(void *arg) {
     ThreadArgs *args = arg;

@@ -4,13 +4,7 @@
 #include "InputData.h"
 #include "OutputData.h"
 #include "ceilDivision.h"
-
-typedef struct {
-    int threadId;
-    long long start;
-    long long end;
-    long long time;
-} ThreadArgs;
+#include "ThreadArgs.h"
 
 void solveThreads(
     InputData *input,
