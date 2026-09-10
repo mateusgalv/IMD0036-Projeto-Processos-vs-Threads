@@ -305,6 +305,10 @@ int main(int argc, char *argv[]) {
     */
     // }
     
+    // END
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    output.time = timer(&start, &end);
+
 
     createFile(&output, input.fileName);
 
