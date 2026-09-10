@@ -1,13 +1,15 @@
 #define _POSIX_C_SOURCE 199309L
 
+
 #include <stdio.h>
 #include <time.h>
 #include <stepsCount.h>
 #include <timer.h>
+#include <createFile.h>
+#include "InputData.h"
 
 void solveSequencial(
-    long long a,
-    long long b,
+    InputData input,
     struct timespec start
 ){
     long long time, steps = 0;
@@ -15,7 +17,7 @@ void solveSequencial(
 
     printf(" --> Execução sequencial (w = 1)\n");
 
-    for(long long i = a; i <= b; i++) {
+    for(long long i = input.a; i <= input.b; i++) {
         steps += stepsCount(i);
     }
 

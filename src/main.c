@@ -11,12 +11,14 @@
 #include <sys/wait.h>
 #include <pthread.h>
 
+
 #include "isEven.h"
 #include "stepsCount.h"
 #include "ceilDivision.h"
 #include "intervalCount.h"
 #include "timer.h"
 #include "solveSequencial.h"
+#include "InputData.h"
 
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
@@ -36,6 +38,10 @@ typedef struct {
     char fileName;
 } FileArgs;
 
+/*
+<A> <B> <W> <modo> <particao> <arquivo_saida>
+            1   2   3    4         5             6
+*/
 
 void report(const int id, const long long *steps, const long long *time) {
     char path[32];
@@ -145,17 +151,32 @@ void *useThread(void *arg) {
 */
 int main(int argc, char *argv[]) {
     (void)argc;
-
+    
     int w;
     long long a, b, l, time, maxTime, minTime, aggregationTime;
     struct timespec start, end, aggregationStart, aggregationEnd;
 
+    // START
     clock_gettime(CLOCK_MONOTONIC, &start);
     
+    InputData input;
+    input.a = strtoll(argv[1], NULL, 10);
+    input.b = strtoll(argv[2], NULL, 10);
+    input.w = strtoll(argv[3], NULL, 10);
+        
     a = strtoll(argv[1], NULL, 10);
     b = strtoll(argv[2], NULL, 10);
     w = strtoll(argv[3], NULL, 10);
     
+    if (w == 1) {
+        strcpy(input.modo, "sequencial");
+        strcpy(input.particao, "NULL");
+        strcpy(input.fileName, "sequencial.txt");
+
+        solveSequencial(InputData input, start);
+        return 0;
+    } 
+
     l = b - a + 1;
 
     pthread_t threads[w];
