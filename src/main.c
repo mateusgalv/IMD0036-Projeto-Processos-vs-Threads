@@ -16,6 +16,7 @@
 #include "ceilDivision.h"
 #include "intervalCount.h"
 #include "timer.h"
+#include "solveSequencial.h"
 
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
@@ -26,6 +27,15 @@ typedef struct {
     long long end;
     long long *threadTime;
 } ThreadArgs;
+
+typedef struct {
+    char modo;
+    char particao;
+    int w;
+    long long l;
+    char fileName;
+} FileArgs;
+
 
 void report(const int id, const long long *steps, const long long *time) {
     char path[32];
@@ -45,7 +55,7 @@ void createOutputFile(const char *modo,
     const char *particao,
     const int w,
     const long long l,
-    const char *time,
+    const long long time,
     const char *maxTime,
     const char *minTime,
     const char *agregationTime,
@@ -59,7 +69,7 @@ void createOutputFile(const char *modo,
     if (file == NULL) exit(-1);
     
     fprintf(file,
-        "%s,%s,%d,%lld,%s,%s,%s,%s\n",
+        "%s,%s,%d,%lld,%lld,%s,%s,%s\n",
         modo, particao, w, l, time, maxTime, minTime, agregationTime
     );
 
@@ -124,6 +134,7 @@ void *useThread(void *arg) {
     args->threadTime[args->id] = threadTotalTime;
 
     printf("Tempo da thread %d: %lld segundos ou %.2e segundos\n", args->id, threadTotalTime, (double)threadTotalTime);
+    
     return NULL;
 }
 
@@ -136,10 +147,9 @@ int main(int argc, char *argv[]) {
     (void)argc;
 
     int w;
-    long long a, b, l, time, maxTime, minTime; 
-    // aggregationTime;
+    long long a, b, l, time, maxTime, minTime, aggregationTime;
     struct timespec start, end, aggregationStart, aggregationEnd;
-    
+
     clock_gettime(CLOCK_MONOTONIC, &start);
     
     a = strtoll(argv[1], NULL, 10);
@@ -149,29 +159,15 @@ int main(int argc, char *argv[]) {
     l = b - a + 1;
 
     pthread_t threads[w];
+
+    // Armazena tempo utilizado em cada thread w
     long long threadTime[w];
     ThreadArgs args[w];
 
     printf(" -> Intervalo [%lld,%lld]\n -> L = %lld\n", a, b, l);
 
-    // SEQUENCIAL
     if (w == 1) {
-        char timeStr[32];
-
-        printf(" --> Execução sequencial (w = 1)\n");
-        
-        for(long long i = a; i <= b; i++) {
-            stepsCount(i);
-        }
-
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        time = timer(&start, &end);
-        snprintf(timeStr, sizeof(timeStr), "%.2e", (double)time);
-        
-        printf("Tempo: %lld s ou %.2e s\n", time, (double)time);
-
-        createOutputFile("-1", "sequencial", w, l, timeStr, "-1", "-1", "-1", "sequencial");
-
+        solveSequencial(a, b, start);
         return 0;
     } 
 
@@ -229,10 +225,15 @@ int main(int argc, char *argv[]) {
 
         clock_gettime(CLOCK_MONOTONIC, &aggregationEnd);
         clock_gettime(CLOCK_MONOTONIC, &end);
-        // aggregationTime = timer(&aggregationStart, &aggregationEnd);
+        aggregationTime = timer(&aggregationStart, &aggregationEnd);
         time = timer(&start, &end);
         
-        // createOutputFile(argv[4], argv[5], w, l, &time, &maxTime, &minTime, &aggregationTime, argv[6]);
+        char maxTimeStr[64], minTimeStr[64], aggregationTimeStr[64];
+
+        snprintf(maxTimeStr, sizeof(maxTimeStr), "%.2e", (double)maxTime);
+        snprintf(minTimeStr, sizeof(minTimeStr), "%.2e", (double)minTime);
+        snprintf(aggregationTimeStr, sizeof(aggregationTimeStr), "%.2e", (double)aggregationTime);
+        createOutputFile(argv[4], argv[5], w, l, time, maxTimeStr, minTimeStr, aggregationTimeStr, argv[6]);
 
     // PROCESSOS
     /*
