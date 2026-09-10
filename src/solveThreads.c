@@ -46,4 +46,9 @@ void solveThreads(
         printf(" --> Solução por Threads + Ciclico - Incremento = %lld\n", input->w);
 
     }
+
+    for (int j = 0; j < input->w; j ++) {
+        // Espera todas as threads
+        pthread_join(threads[j], NULL);
+    }
 }
