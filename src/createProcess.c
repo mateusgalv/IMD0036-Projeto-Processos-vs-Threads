@@ -15,7 +15,6 @@ void createProcess(
     int increment
 ){
     struct timespec timerStart, timerEnd;
-    long long steps;
 
     pid_t pid = fork();
 
@@ -23,8 +22,8 @@ void createProcess(
         // PROCESSO FILHO
         clock_gettime(CLOCK_MONOTONIC, &timerStart);
 
-        steps = 0;
-        for (int i = start; i <= end; i += increment) {
+        long long steps = 0;
+        for (long long i = start; i <= end; i += increment) {
             steps += stepsCount(i);
         }
 
@@ -32,7 +31,10 @@ void createProcess(
 
         clock_gettime(CLOCK_MONOTONIC, &timerEnd);
         timer(&timerStart, &timerEnd);
-        exit(1);
+
+        // createTempFile
+
+        exit(0);
     } else {
         // PROCESSO PAI
         printf(" -> Processo filho %d - Intervalo [%lld, %lld]\n", processId, start, end);
