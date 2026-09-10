@@ -1,31 +1,23 @@
 #include <stdio.h>
+#include "OutputData.h"
 
+// modo,particao,W,L,tempo_total,tempo_max_filho,tempo_min_filho,tempo_agregacao
 void createFile(
-    char fileName,
-    char modo,
-    char particao,
-    int w,
-    long long l,
-    long long time,
-    char maxTime,
-    char minTime,
-    char aggregationTime
+    OutputData output
 ){
     char path[32];
 
-    snprintf(path, sizeof(path), "output/%s.txt", fileName);
+    snprintf(path, sizeof(path), "output/%s.txt", "fileName");
     
     FILE *file = fopen(path, "w");
     if (file == NULL) return;
     
-    /*
-    modo, particao,W,L,tempo_total,tempo_max_filho,tempo_min_filho,tempo_agregacao
-    */
-    fprintf(
-        file,
-        "%s,%s,%d,%lld",
-        modo, particao, w, l, time, maxTime, minTime, aggregationTime
-    );
+    
+    // fprintf(
+    //     file,
+    //     "%s,%s,%d,%lld",
+    //     modo, particao, w, l, time, maxTime, minTime, aggregationTime
+    // );
 
     return;
 }

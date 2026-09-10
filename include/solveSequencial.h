@@ -2,10 +2,10 @@
 #define SOLVESEQUENCIAL_H
 
 #include <time.h>
+#include "InputData.h"
 
 void solveSequencial(
-    long long a,
-    long long b,
+    InputData *input,
     struct timespec start
 );
 

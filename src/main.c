@@ -162,18 +162,14 @@ int main(int argc, char *argv[]) {
     InputData input;
     input.a = strtoll(argv[1], NULL, 10);
     input.b = strtoll(argv[2], NULL, 10);
-    input.w = strtoll(argv[3], NULL, 10);
+    input.w = atoi(argv[3]);
         
     a = strtoll(argv[1], NULL, 10);
     b = strtoll(argv[2], NULL, 10);
-    w = strtoll(argv[3], NULL, 10);
+    w = atoi(argv[3]);
     
     if (w == 1) {
-        strcpy(input.modo, "sequencial");
-        strcpy(input.particao, "NULL");
-        strcpy(input.fileName, "sequencial.txt");
-
-        solveSequencial(InputData input, start);
+        solveSequencial(&input, start);
         return 0;
     } 
 
@@ -188,7 +184,7 @@ int main(int argc, char *argv[]) {
     printf(" -> Intervalo [%lld,%lld]\n -> L = %lld\n", a, b, l);
 
     if (w == 1) {
-        solveSequencial(a, b, start);
+        solveSequencial(&input, start);
         return 0;
     } 
 
