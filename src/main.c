@@ -28,13 +28,6 @@
 // A = 100.007.273 -> B = 8.000.000.000
 
 typedef struct {
-    int id;
-    long long start;
-    long long end;
-    long long *threadTime;
-} ThreadArgs;
-
-typedef struct {
     char modo;
     char particao;
     int w;
@@ -100,33 +93,6 @@ void createTempFile(const int id, long long steps, long long time) {
 }
 
 /*
-void createProcess(const int id, const long long start, const long long end) {
-    struct timespec timerStart, timerEnd;
-    long long processTotalTime, i, steps = 0;
-
-    pid_t pid = fork(); 
-    
-    if(pid == 0) {
-        // PROCESSO FILHO
-        clock_gettime(CLOCK_MONOTONIC, &timerStart);
-        for(i = start; i <= end; i++) {
-            steps += stepsCount(i);
-        }
-        printf("Filho %d terminou, %lld passos\n", id, steps);
-        
-        clock_gettime(CLOCK_MONOTONIC, &timerEnd);
-        processTotalTime = timer(&timerStart, &timerEnd);
-        createTempFile(id, steps, processTotalTime);
-        printf("Tempo do filho %d: %lld segundos ou %.2e segundos\n", id, processTotalTime, (double)processTotalTime);
-
-        exit(1);
-    } else {
-        // PROCESSO PAI
-        printf(" --> Filho %d criado (PID: %d), [%lld, %lld]\n", id, pid, start, end);
-    }
-}
-*/
-
 void *useThread(void *arg) {
     struct timespec timerStart, timerEnd;
     long long threadTotalTime, steps = 0;
@@ -149,7 +115,7 @@ void *useThread(void *arg) {
     
     return NULL;
 }
-
+*/
 
 /*
 ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
@@ -161,7 +127,7 @@ int main(int argc, char *argv[]) {
     InputData input;
     OutputData output;
 
-    // START
+    // TIMER START
     clock_gettime(CLOCK_MONOTONIC, &start);
 
     input.a = strtoll(argv[1], NULL, 10);
