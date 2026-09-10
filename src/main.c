@@ -93,31 +93,6 @@ void createTempFile(const int id, long long steps, long long time) {
 }
 
 /*
-void *useThread(void *arg) {
-    struct timespec timerStart, timerEnd;
-    long long threadTotalTime, steps = 0;
-
-    ThreadArgs *args = arg;
-
-    clock_gettime(CLOCK_MONOTONIC, &timerStart);
-
-    for(int i = args->start; i <= args->end; i++) {
-        steps += stepsCount(i);
-    }
-    printf("Thread %d terminou, %lld passos\n", args->id, steps);
-
-    clock_gettime(CLOCK_MONOTONIC, &timerEnd);
-
-    threadTotalTime = timer(&timerStart, &timerEnd);
-    args->threadTime[args->id] = threadTotalTime;
-
-    printf("Tempo da thread %d: %lld segundos ou %.2e segundos\n", args->id, threadTotalTime, (double)threadTotalTime);
-    
-    return NULL;
-}
-*/
-
-/*
 ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
             1   2   3    4         5             6
 */
@@ -145,7 +120,7 @@ int main(int argc, char *argv[]) {
     if (strcmp(argv[4], "processo") == 0) {
         solveProcess(&input, &output);
     } else { // threads
-        // solveThreads(&input, &output);
+        solveThreads(&input, &output);
     }
     
     /*

@@ -6,6 +6,7 @@ typedef struct {
     long long start;
     long long end;
     long long time;
+    int increment;
 } ThreadArgs;
 
 #endif

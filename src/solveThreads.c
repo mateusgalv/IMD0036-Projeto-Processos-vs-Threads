@@ -1,10 +1,13 @@
 
 #include <pthread.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "InputData.h"
 #include "OutputData.h"
 #include "ceilDivision.h"
 #include "ThreadArgs.h"
+#include "useThread.h"
 
 void solveThreads(
     InputData *input,
@@ -27,8 +30,9 @@ void solveThreads(
             args[i].threadId = i;
             args[i].start = blockStart;
             args[i].end = blockEnd;
+            args[i].increment = 1;
 
-            // pthread_create(&threads[i], NULL, useThread, &args[i]);
+            pthread_create(&threads[i], NULL, useThread, &args[i]);
 
             blockStart = blockEnd + 1;
             blockEnd = blockEnd + blockSize;
@@ -37,8 +41,16 @@ void solveThreads(
     }
     // SOLUÇÃO CÍCLICA
     else if (strcmp(input->particao, "ciclico") == 0) {
-        printf(" --> Solução por Threads + Ciclico - Incremento = %lld\n", input->w);
+        printf(" --> Solução por Threads + Ciclico - Incremento = %d\n", input->w);
 
+        for (int i = 0; i < input->w; i++) {
+            args[i].threadId = i;
+            args[i].start = input->a + i;
+            args[i].end = input->b;
+            args[i].increment = input->w;
+
+            pthread_create(&threads[i], NULL, useThread, &args[i]);
+        }
     }
 
     for (int j = 0; j < input->w; j ++) {
