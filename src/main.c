@@ -21,6 +21,7 @@
 #include "InputData.h"
 #include "OutputData.h"
 #include "createFile.h"
+#include "solveProcess.h"
 
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
@@ -97,6 +98,7 @@ void createTempFile(const int id, long long steps, long long time) {
     fclose(file);
 }
 
+/*
 void createProcess(const int id, const long long start, const long long end) {
     struct timespec timerStart, timerEnd;
     long long processTotalTime, i, steps = 0;
@@ -122,6 +124,7 @@ void createProcess(const int id, const long long start, const long long end) {
         printf(" --> Filho %d criado (PID: %d), [%lld, %lld]\n", id, pid, start, end);
     }
 }
+*/
 
 void *useThread(void *arg) {
     struct timespec timerStart, timerEnd;
@@ -163,6 +166,7 @@ int main(int argc, char *argv[]) {
     
     InputData input;
     OutputData output;
+
     input.a = strtoll(argv[1], NULL, 10);
     input.b = strtoll(argv[2], NULL, 10);
     input.w = atoi(argv[3]);
@@ -170,9 +174,17 @@ int main(int argc, char *argv[]) {
     if (input.w == 1) {
         solveSequencial(&input, &output, start);
     } else {
-        
+        strcpy(input.modo, argv[4]);
+        strcpy(input.particao, argv[5]);
     }
     
+    if (strcmp(argv[4], "processo") == 0) {
+        solveProcess(&input, &output);
+    } else { // threads
+        // solveThreads(&input, &output);
+    }
+    
+    /*
     // legado
     a = strtoll(argv[1], NULL, 10);
     b = strtoll(argv[2], NULL, 10);
@@ -182,72 +194,73 @@ int main(int argc, char *argv[]) {
     // Armazena tempo utilizado em cada thread w
     long long threadTime[w];
     ThreadArgs args[w];
+    */
 
-    printf(" -> Intervalo [%lld,%lld]\n -> L = %lld\n", a, b, l);
+    /**/
 
     // LOGICA POR BLOCOS - PROCESSOS OU THREADS
-    if (strcmp(argv[5], "bloco") == 0) {
-        long long blockSize, blockStart, blockEnd;
+    // if (strcmp(argv[5], "bloco") == 0) {
+    //     long long blockSize, blockStart, blockEnd;
 
-        blockSize = ceilDivision(l, w);
-        printf(" -> Tamanho dos blocos = %lld\n", blockSize);
-        blockStart = a;
-        blockEnd = a + blockSize - 1;
+    //     blockSize = ceilDivision(l, w);
+    //     printf(" -> Tamanho dos blocos = %lld\n", blockSize);
+    //     blockStart = a;
+    //     blockEnd = a + blockSize - 1;
 
-        for(int i = 0; i < w; i++) {
-            if (strcmp(argv[4], "processo") == 0) {
-                createProcess(i, blockStart, blockEnd);
-            } else if (strcmp(argv[4], "thread") == 0) {
-                args[i].id = i;
-                args[i].start = blockStart;
-                args[i].end = blockEnd;
-                args[i].threadTime = threadTime;
+    //     for(int i = 0; i < w; i++) {
+    //         if (strcmp(argv[4], "processo") == 0) {
+    //             createProcess(i, blockStart, blockEnd);
+    //         } else if (strcmp(argv[4], "thread") == 0) {
+    //             args[i].id = i;
+    //             args[i].start = blockStart;
+    //             args[i].end = blockEnd;
+    //             args[i].threadTime = threadTime;
 
-                pthread_create(&threads[i], NULL, useThread, &args[i]);
-            }
+    //             pthread_create(&threads[i], NULL, useThread, &args[i]);
+    //         }
 
-            blockStart = blockEnd + 1;
-            blockEnd = blockEnd + blockSize;
-            if (blockEnd > b) blockEnd = b;
-        }
+    //         blockStart = blockEnd + 1;
+    //         blockEnd = blockEnd + blockSize;
+    //         if (blockEnd > b) blockEnd = b;
+    //     }
 
-        for(int i = 0; i < w; i++) {
-            if (strcmp(argv[4], "processo") == 0)
-                wait(NULL);
-            if (strcmp(argv[4], "thread") == 0)
-                pthread_join(threads[i], NULL);
-        }
-        clock_gettime(CLOCK_MONOTONIC, &aggregationStart);
+    //     for(int i = 0; i < w; i++) {
+    //         if (strcmp(argv[4], "processo") == 0)
+    //             wait(NULL);
+    //         if (strcmp(argv[4], "thread") == 0)
+    //             pthread_join(threads[i], NULL);
+    //     }
+    //     clock_gettime(CLOCK_MONOTONIC, &aggregationStart);
         
-        for(int i = 0; i < w; i++) {
-            if (strcmp(argv[4], "processo") == 0) {
-                // LER ARQUIVOS
-                // GERAR ARQUIVO FINAL
-            }
-            if (strcmp(argv[4], "thread") == 0) {
-                printf("Thread %d -> Tempo: %.2e\n", i, (double)threadTime[i]);
+    //     for(int i = 0; i < w; i++) {
+    //         if (strcmp(argv[4], "processo") == 0) {
+    //             // LER ARQUIVOS
+    //             // GERAR ARQUIVO FINAL
+    //         }
+    //         if (strcmp(argv[4], "thread") == 0) {
+    //             printf("Thread %d -> Tempo: %.2e\n", i, (double)threadTime[i]);
 
-                maxTime = threadTime[0];
-                minTime = threadTime[0];
+    //             maxTime = threadTime[0];
+    //             minTime = threadTime[0];
 
-                for (int j = 1; j < w; j++) {
-                    if(maxTime < threadTime[j]) maxTime = threadTime[j];
-                    if(minTime > threadTime[j]) minTime = threadTime[j];
-                }
-            }
-        }
+    //             for (int j = 1; j < w; j++) {
+    //                 if(maxTime < threadTime[j]) maxTime = threadTime[j];
+    //                 if(minTime > threadTime[j]) minTime = threadTime[j];
+    //             }
+    //         }
+    //     }
 
-        clock_gettime(CLOCK_MONOTONIC, &aggregationEnd);
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        aggregationTime = timer(&aggregationStart, &aggregationEnd);
-        time = timer(&start, &end);
+    //     clock_gettime(CLOCK_MONOTONIC, &aggregationEnd);
+    //     clock_gettime(CLOCK_MONOTONIC, &end);
+    //     aggregationTime = timer(&aggregationStart, &aggregationEnd);
+    //     time = timer(&start, &end);
         
-        char maxTimeStr[64], minTimeStr[64], aggregationTimeStr[64];
+    //     char maxTimeStr[64], minTimeStr[64], aggregationTimeStr[64];
 
-        snprintf(maxTimeStr, sizeof(maxTimeStr), "%.2e", (double)maxTime);
-        snprintf(minTimeStr, sizeof(minTimeStr), "%.2e", (double)minTime);
-        snprintf(aggregationTimeStr, sizeof(aggregationTimeStr), "%.2e", (double)aggregationTime);
-        createOutputFile(argv[4], argv[5], w, l, time, maxTimeStr, minTimeStr, aggregationTimeStr, argv[6]);
+    //     snprintf(maxTimeStr, sizeof(maxTimeStr), "%.2e", (double)maxTime);
+    //     snprintf(minTimeStr, sizeof(minTimeStr), "%.2e", (double)minTime);
+    //     snprintf(aggregationTimeStr, sizeof(aggregationTimeStr), "%.2e", (double)aggregationTime);
+    //     createOutputFile(argv[4], argv[5], w, l, time, maxTimeStr, minTimeStr, aggregationTimeStr, argv[6]);
 
     // PROCESSOS
     /*
@@ -290,11 +303,8 @@ int main(int argc, char *argv[]) {
     } 
    
     */
-    }
+    // }
     
-    // LOGICA CICLICA - PROCESSOS OU THREADS
-    
-    // 
 
     createFile(&output, input.fileName);
 
