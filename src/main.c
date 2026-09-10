@@ -19,6 +19,8 @@
 #include "timer.h"
 #include "solveSequencial.h"
 #include "InputData.h"
+#include "OutputData.h"
+#include "createFile.h"
 
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
@@ -160,33 +162,28 @@ int main(int argc, char *argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &start);
     
     InputData input;
+    OutputData output;
     input.a = strtoll(argv[1], NULL, 10);
     input.b = strtoll(argv[2], NULL, 10);
     input.w = atoi(argv[3]);
+    
+    if (input.w == 1) {
+        solveSequencial(&input, &output, start);
+    } else {
         
+    }
+    
+    // legado
     a = strtoll(argv[1], NULL, 10);
     b = strtoll(argv[2], NULL, 10);
     w = atoi(argv[3]);
-    
-    if (w == 1) {
-        solveSequencial(&input, start);
-        return 0;
-    } 
-
     l = b - a + 1;
-
     pthread_t threads[w];
-
     // Armazena tempo utilizado em cada thread w
     long long threadTime[w];
     ThreadArgs args[w];
 
     printf(" -> Intervalo [%lld,%lld]\n -> L = %lld\n", a, b, l);
-
-    if (w == 1) {
-        solveSequencial(&input, start);
-        return 0;
-    } 
 
     // LOGICA POR BLOCOS - PROCESSOS OU THREADS
     if (strcmp(argv[5], "bloco") == 0) {
@@ -297,5 +294,9 @@ int main(int argc, char *argv[]) {
     
     // LOGICA CICLICA - PROCESSOS OU THREADS
     
+    // 
+
+    createFile(&output, input.fileName);
+
     return 0;
 }

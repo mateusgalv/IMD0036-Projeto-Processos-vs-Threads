@@ -11,11 +11,11 @@
 
 void solveSequencial(
     InputData *input,
+    OutputData *output,
     struct timespec start
 ){
     long long time, steps = 0;
     struct timespec end;
-    OutputData output;
 
     printf(" --> Execução sequencial (w = 1)\n");
 
@@ -28,16 +28,16 @@ void solveSequencial(
 
     printf("Numero de passos: %lld, Tempo: %lld segundos (%.2e segundos)\n", steps, time, (double)time);
 
-    strcpy(output.modo, "sequencial");
-    strcpy(output.particao, "bloco");
-    output.w = input->w;
-    output.length = (input->b - input->a + 1);
-    output.time = time;
-    output.maxTime = -1;
-    output.minTime = -1;
-    output.aggregationTime = -1;
+    strcpy(input->fileName, "sequencial");
 
-    createFile(output);
+    strcpy(output->modo, "sequencial");
+    strcpy(output->particao, "bloco");
+    output->w = input->w;
+    output->length = (input->b - input->a + 1);
+    output->time = time;
+    output->maxTime = -1;
+    output->minTime = -1;
+    output->aggregationTime = -1;
 
     return;
 }

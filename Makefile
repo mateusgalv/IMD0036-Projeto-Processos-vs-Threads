@@ -7,6 +7,7 @@ LDFLAGS = -pthread
 SRC_DIR = src
 BUILD_DIR = build
 TEMP_DIR = temp
+OUT_DIR = output
 
 # // A = 100.007.273 -> B = 8.000.000.000
 # SEQUENCIAL
@@ -41,12 +42,13 @@ $(TARGET): $(OBJS)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(TEMP_DIR)
+	@mkdir -p $(OUT_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 run: all
 	./$(TARGET) $(ARGS)
 
 clean:
-	@rm -rf $(BUILD_DIR) $(TEMP_DIR) bin
+	@rm -rf $(BUILD_DIR) $(TEMP_DIR) $(OUT_DIR) bin
 
 .PHONY: all run clean

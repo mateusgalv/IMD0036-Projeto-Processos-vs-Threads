@@ -3,9 +3,11 @@
 
 #include <time.h>
 #include "InputData.h"
+#include "OutputData.h"
 
 void solveSequencial(
     InputData *input,
+    OutputData *output,
     struct timespec start
 );
 
