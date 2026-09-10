@@ -17,11 +17,12 @@
 #include "ceilDivision.h"
 #include "intervalCount.h"
 #include "timer.h"
-#include "solveSequencial.h"
 #include "InputData.h"
 #include "OutputData.h"
 #include "createFile.h"
+#include "solveSequencial.h"
 #include "solveProcess.h"
+#include "solveThreads.h"
 
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
@@ -156,16 +157,12 @@ void *useThread(void *arg) {
 */
 int main(int argc, char *argv[]) {
     (void)argc;
-    
-    int w;
-    long long a, b, l, time, maxTime, minTime, aggregationTime;
     struct timespec start, end, aggregationStart, aggregationEnd;
+    InputData input;
+    OutputData output;
 
     // START
     clock_gettime(CLOCK_MONOTONIC, &start);
-    
-    InputData input;
-    OutputData output;
 
     input.a = strtoll(argv[1], NULL, 10);
     input.b = strtoll(argv[2], NULL, 10);
@@ -176,6 +173,7 @@ int main(int argc, char *argv[]) {
     } else {
         strcpy(input.modo, argv[4]);
         strcpy(input.particao, argv[5]);
+        strcpy(input.fileName, argv[6]);
     }
     
     if (strcmp(argv[4], "processo") == 0) {

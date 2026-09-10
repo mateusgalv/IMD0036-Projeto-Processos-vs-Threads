@@ -29,7 +29,7 @@ void solveProcess(
             if (blockEnd > input->b) blockEnd = input->b;
         }        
     }
-    // SOLUÇÃO CICLICA
+    // SOLUÇÃO CÍCLICA
     else if (strcmp(input->particao, "ciclico") == 0) {
         printf(" --> Solução por Processos + Ciclico, Incremento = %d\n", input->w);
 
