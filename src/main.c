@@ -98,7 +98,7 @@ void createTempFile(const int id, long long steps, long long time) {
 */
 int main(int argc, char *argv[]) {
     (void)argc;
-    struct timespec start, end, aggregationStart, aggregationEnd;
+    struct timespec start, end;
     InputData input;
     OutputData output;
 
@@ -115,6 +115,7 @@ int main(int argc, char *argv[]) {
         strcpy(input.modo, argv[4]);
         strcpy(input.particao, argv[5]);
         strcpy(input.fileName, argv[6]);
+        output.length = (input.b - input.a + 1);
     }
     
     if (strcmp(argv[4], "processo") == 0) {
@@ -123,20 +124,6 @@ int main(int argc, char *argv[]) {
         solveThreads(&input, &output);
     }
     
-    /*
-    // legado
-    a = strtoll(argv[1], NULL, 10);
-    b = strtoll(argv[2], NULL, 10);
-    w = atoi(argv[3]);
-    l = b - a + 1;
-    pthread_t threads[w];
-    // Armazena tempo utilizado em cada thread w
-    long long threadTime[w];
-    ThreadArgs args[w];
-    */
-
-    /**/
-
     // LOGICA POR BLOCOS - PROCESSOS OU THREADS
     // if (strcmp(argv[5], "bloco") == 0) {
     //     long long blockSize, blockStart, blockEnd;
@@ -200,54 +187,13 @@ int main(int argc, char *argv[]) {
     //     snprintf(minTimeStr, sizeof(minTimeStr), "%.2e", (double)minTime);
     //     snprintf(aggregationTimeStr, sizeof(aggregationTimeStr), "%.2e", (double)aggregationTime);
     //     createOutputFile(argv[4], argv[5], w, l, time, maxTimeStr, minTimeStr, aggregationTimeStr, argv[6]);
-
-    // PROCESSOS
-    /*
-
-    if (strcmp(argv[4], "processo") == 0) {
-              
-        // CICLICO
-        if (strcmp(argv[5], "ciclico")== 0) {
-            
-            for(int i = 0; i < w; i++) {
-                pid_t pid = fork();
-                if (pid != 0) printf(" --> Filho %d - PID: %d criado\n", i, pid);
-
-                if (pid == 0) {
-                    // PROCESSO FILHO
-                    struct timespec start, end;
-                    long long steps = 0, time;
-
-                    // -----> CONTAGEM DE TEMPO INICIO
-                    clock_gettime(CLOCK_MONOTONIC, &start);
-
-                    // -----> CONTAGEM DE PASSOS
-                    for(long long number = i + a; number <= b; number += w) {
-                        steps += stepsCount(number);
-                    }
-                    printf(" ---> Filho %d -> Passos = %lld\n", i, steps);
-                    
-                    // -----> CONTAGEM DE TEMPO FIM
-                    clock_gettime(CLOCK_MONOTONIC, &end);
-                    time = timer(&start, &end);
-                    printf(" ---> Filho %d -> TEMPO: %lld nanosegundos\n", i, time);
-                    
-                    // -----> ESCREVER ARQUIVO
-                    report(i, &steps, &time);
-
-                    exit(0);
-                }
-            }
-        }
-    } 
-   
-    */
+    
     // }
     
-    // END
+    // TIMER & AGREGAÇÃO END
     clock_gettime(CLOCK_MONOTONIC, &end);
     output.time = timer(&start, &end);
-
+    output.aggregationTime = timer(&input.aggregationStart, &end);
 
     createFile(&output, input.fileName);
 

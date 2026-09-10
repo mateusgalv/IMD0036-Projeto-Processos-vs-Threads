@@ -1,5 +1,8 @@
+#define _POSIX_C_SOURCE 199309L
+
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 #include <sys/wait.h>
 
 #include "InputData.h"
@@ -14,7 +17,6 @@ void solveProcess(
     // SOLUÇÃO POR BLOCO
     if (strcmp(input->particao, "bloco") == 0) {
         long long blockSize, blockStart, blockEnd;
-        output->length = (input->b - input->a - 1);
         blockSize = ceilDivision(output->length, input->w);
         blockStart = input->a;
         blockEnd = (input->a + blockSize - 1);
@@ -42,6 +44,7 @@ void solveProcess(
         // Espera todos os filhos
         wait(NULL);
     }
+    clock_gettime(CLOCK_MONOTONIC, &input->aggregationStart);
 
     return;
 }

@@ -1,7 +1,9 @@
+#define _POSIX_C_SOURCE 199309L
 
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "InputData.h"
 #include "OutputData.h"
@@ -57,4 +59,21 @@ void solveThreads(
         // Espera todas as threads
         pthread_join(threads[j], NULL);
     }
+    // TIMER DE AGREGAÇÃO START
+    clock_gettime(CLOCK_MONOTONIC, &input->aggregationStart);
+
+    long long maxTime, minTime;
+    maxTime = args[0].time;
+    minTime = args[0].time;
+    for (int k = 1; k < input->w; k++) {
+        if (args[k].time > maxTime) 
+            maxTime = args[k].time;
+        if (args[k].time < minTime)
+            minTime = args[k].time;
+    }
+
+    output->maxTime = maxTime;
+    output->minTime = minTime;
+
+    printf("maxTime (ns) = %lld, minTime (ns) = %lld\n", maxTime, minTime);
 }
