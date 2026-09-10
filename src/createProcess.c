@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include "stepsCount.h"
 #include "timer.h"
@@ -14,7 +15,7 @@ void createProcess(
     int increment
 ){
     struct timespec timerStart, timerEnd;
-    long long time, steps = 0;
+    long long steps;
 
     pid_t pid = fork();
 
@@ -22,6 +23,7 @@ void createProcess(
         // PROCESSO FILHO
         clock_gettime(CLOCK_MONOTONIC, &timerStart);
 
+        steps = 0;
         for (int i = start; i <= end; i += increment) {
             steps += stepsCount(i);
         }
@@ -29,7 +31,7 @@ void createProcess(
         printf("Processo filho %d terminou - Passos = %lld\n", processId, steps);
 
         clock_gettime(CLOCK_MONOTONIC, &timerEnd);
-        time = timer(&timerStart, &timerEnd);
+        timer(&timerStart, &timerEnd);
         exit(1);
     } else {
         // PROCESSO PAI
