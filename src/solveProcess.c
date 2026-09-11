@@ -9,6 +9,7 @@
 #include "OutputData.h"
 #include "createProcess.h"
 #include "ceilDivision.h"
+#include "readTempFiles.h"
 
 void solveProcess(
     InputData *input,
@@ -44,7 +45,24 @@ void solveProcess(
         // Espera todos os filhos
         wait(NULL);
     }
+
+    // TIMER DE AGREGAÇÃO START
     clock_gettime(CLOCK_MONOTONIC, &input->aggregationStart);
+
+    long long times[input->w];
+    readTempFiles(input->w, times);
+    long long maxTime = times[0];
+    long long minTime = times[0];
+    for (int k = 1; k < input->w; k++) {
+        if (times[k] > maxTime) 
+            maxTime = times[k];
+        if (times[k] < minTime)
+            minTime = times[k];
+    }
+
+    output->maxTime = maxTime;
+    output->minTime = minTime;
+    printf("maxTime (ns) = %lld, minTime (ns) = %lld\n", maxTime, minTime);
 
     return;
 }

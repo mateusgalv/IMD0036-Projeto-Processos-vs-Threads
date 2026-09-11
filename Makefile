@@ -15,13 +15,13 @@ OUT_DIR = output
 # ARGS = 100007273 8000000000 1
 
 # BLOCOS + PROCESSOS
-# ARGS = 1000 5000 7 processo bloco
-# ARGS = 100007273 500000000 7 processo bloco
-# ARGS = 100007273 100007373 7 processo bloco
+ARGS = 1000 5000 7 processo bloco teste
+# ARGS = 100007273 500000000 7 processo bloco teste
+# ARGS = 100007273 100007373 7 processo bloco teste
 
 # BLOCOS + THREADS
 # ARGS = 1000 5000 7 thread bloco teste
-ARGS = 1000 5000 7 thread ciclico teste
+# ARGS = 1000 5000 7 thread ciclico teste
 # ARGS = 100007273 1000000000 8 thread bloco teste
 # ARGS = 100007273 1000000000 8 thread bloco teste
 

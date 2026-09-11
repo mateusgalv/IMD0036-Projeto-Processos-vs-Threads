@@ -27,11 +27,6 @@
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
 
-/*
-<A> <B> <W> <modo> <particao> <arquivo_saida>
-            1   2   3    4         5             6
-*/
-
 void report(const int id, const long long *steps, const long long *time) {
     char path[32];
     
@@ -42,19 +37,6 @@ void report(const int id, const long long *steps, const long long *time) {
     if (file == NULL) exit(-1);
 
     fprintf(file, "%lld %lld\n", *steps, *time);
-
-    fclose(file);
-}
-
-void createTempFile(const int id, long long steps, long long time) {
-    char path[32];
-
-    snprintf(path, sizeof(path), "temp/parcial_%d.txt", id);
-    
-    FILE *file = fopen(path, "w");
-    if (file == NULL) exit(-1);
-    
-    fprintf(file,"%lld,%.2e", steps, (double)time);
 
     fclose(file);
 }

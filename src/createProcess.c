@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include "stepsCount.h"
 #include "timer.h"
+#include "createTempFile.h"
 
 void createProcess(
     int processId,
@@ -35,7 +36,7 @@ void createProcess(
         clock_gettime(CLOCK_MONOTONIC, &timerEnd);
         long long time = timer(&timerStart, &timerEnd);
 
-        // createTempFile(processId, steps, time);
+        createTempFile(processId, steps, time);
 
         exit(0);
     } else {
