@@ -13,9 +13,6 @@
 #include "solveThreads.h"
 #include "createFile.h"
 
-// MATRICULA = 007273;
-// A = 100.007.273 -> B = 8.000.000.000
-
 /*
 ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
             1   2   3    4         5             6
@@ -26,22 +23,23 @@ int main(int argc, char *argv[]) {
     InputData input;
     OutputData output;
 
-    // TIMER START
-    clock_gettime(CLOCK_MONOTONIC, &start);
-
     input.a = strtoll(argv[1], NULL, 10);
     input.b = strtoll(argv[2], NULL, 10);
     input.w = atoi(argv[3]);
+    output.length = (input.b - input.a + 1);
+    output.w = input.w;
     
+    // TIMER START
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
     if (input.w == 1) {
-        solveSequencial(&input, &output, start);
+        solveSequencial(&input, &output);
     } else {
         strcpy(input.modo, argv[4]);
         strcpy(output.modo, argv[4]);
         strcpy(input.particao, argv[5]);
         strcpy(output.particao, argv[5]);
         strcpy(input.fileName, argv[6]);
-        output.length = (input.b - input.a + 1);
     }
     
     if (strcmp(argv[4], "processo") == 0) {
@@ -53,6 +51,7 @@ int main(int argc, char *argv[]) {
     // TIMER & AGREGAÇÃO END
     clock_gettime(CLOCK_MONOTONIC, &end);
     output.time = timer(&start, &end);
+
     output.aggregationTime = timer(&input.aggregationStart, &end);
 
     createFile(&output, input.fileName);

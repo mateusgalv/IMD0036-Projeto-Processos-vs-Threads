@@ -7,8 +7,7 @@
 
 void solveSequencial(
     InputData *input,
-    OutputData *output,
-    struct timespec start
+    OutputData *output
 );
 
 #endif
