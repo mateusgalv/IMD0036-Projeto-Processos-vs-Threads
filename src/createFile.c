@@ -15,15 +15,15 @@ void createFile(
     
     fprintf(
         file,
-        "%s,%s,%d,%lld,%lld,%lld,%lld,%lld",
+        "%s,%s,%d,%lld,%.2e,%.2e,%.2e,%.2e",
         output->modo,
         output->particao,
         output->w,
         output->length,
-        output->time,
-        output->maxTime,
-        output->minTime,
-        output->aggregationTime
+        (double)((output->time)/1000000000LL),
+        (double)((output->maxTime)/1000000000LL),
+        (double)((output->minTime)/1000000000LL),
+        (double)((output->aggregationTime)/1000000000LL)
     );
 
     fclose(file);

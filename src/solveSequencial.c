@@ -21,9 +21,11 @@ void solveSequencial(
         steps += stepsCount(i);
     }
 
-    strcpy(input->fileName, "sequencial");
+    strcpy(input->modo, "sequencial");
     strcpy(output->modo, "sequencial");
+    strcpy(input->particao, "bloco");
     strcpy(output->particao, "bloco");
+    strcpy(input->fileName, "sequencial");
     output->maxTime = -1;
     output->minTime = -1;
 

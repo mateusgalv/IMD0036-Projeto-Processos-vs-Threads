@@ -56,5 +56,13 @@ int main(int argc, char *argv[]) {
 
     createFile(&output, input.fileName);
 
+    // IMPRIME RESULTADO
+    printf("\nResultado = {\n");
+    printf("  modo: %s,\n  particao: %s,\n", output.modo, output.particao);
+    printf("  W: %d,\n  L: %lld,\n", output.w, output.length);
+    printf("  tempo (s): %.2e,\n", (double)((output.time)/1000000000LL));
+    printf("  maxTime (s): %.2e,\n", (double)((output.maxTime)/1000000000LL));
+    printf("  minTime (s): %.2e,\n", (double)((output.minTime)/1000000000LL));
+    printf("  aggregationTime (s): %.2e\n}", (double)((output.aggregationTime)/1000000000LL));
     return 0;
 }
