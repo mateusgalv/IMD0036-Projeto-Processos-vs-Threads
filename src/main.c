@@ -42,13 +42,13 @@ int main(int argc, char *argv[]) {
         strcpy(input.fileName, argv[6]);
     }
     
-    if (strcmp(argv[4], "processo") == 0) {
+    if (strcmp(input.modo, "processo") == 0) {
         solveProcess(&input, &output);
-    } else { // threads
+    } else if (strcmp(input.modo, "thread") == 0) {
         solveThreads(&input, &output);
     }
-    
-    // TIMER & AGREGAÇÃO END
+
+    // TIMER END
     clock_gettime(CLOCK_MONOTONIC, &end);
     output.time = timer(&start, &end);
 

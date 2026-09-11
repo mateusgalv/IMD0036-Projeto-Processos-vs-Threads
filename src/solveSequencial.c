@@ -29,6 +29,6 @@ void solveSequencial(
 
     struct timespec aggregationTime = {0};
     input->aggregationStart = aggregationTime;  
-
+   
     return;
 }
