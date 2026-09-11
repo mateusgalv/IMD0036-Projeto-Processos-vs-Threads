@@ -26,7 +26,6 @@ void createFile(
         output->aggregationTime
     );
 
-    // fclose(file);
-
+    fclose(file);
     return;
 }

@@ -27,14 +27,6 @@
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
 
-typedef struct {
-    char modo;
-    char particao;
-    int w;
-    long long l;
-    char fileName;
-} FileArgs;
-
 /*
 <A> <B> <W> <modo> <particao> <arquivo_saida>
             1   2   3    4         5             6
@@ -50,31 +42,6 @@ void report(const int id, const long long *steps, const long long *time) {
     if (file == NULL) exit(-1);
 
     fprintf(file, "%lld %lld\n", *steps, *time);
-
-    fclose(file);
-}
-
-void createOutputFile(const char *modo,
-    const char *particao,
-    const int w,
-    const long long l,
-    const long long time,
-    const char *maxTime,
-    const char *minTime,
-    const char *agregationTime,
-    const char *fileName
-) {
-    char path[32];
-
-    snprintf(path, sizeof(path), "output/%s.txt", fileName);
-    
-    FILE *file = fopen(path, "w");
-    if (file == NULL) exit(-1);
-    
-    fprintf(file,
-        "%s,%s,%d,%lld,%lld,%s,%s,%s\n",
-        modo, particao, w, l, time, maxTime, minTime, agregationTime
-    );
 
     fclose(file);
 }
@@ -113,7 +80,9 @@ int main(int argc, char *argv[]) {
         solveSequencial(&input, &output, start);
     } else {
         strcpy(input.modo, argv[4]);
+        strcpy(output.modo, argv[4]);
         strcpy(input.particao, argv[5]);
+        strcpy(output.particao, argv[5]);
         strcpy(input.fileName, argv[6]);
         output.length = (input.b - input.a + 1);
     }

@@ -10,7 +10,7 @@ void *useThread(void *arg) {
     ThreadArgs *args = arg;
     struct timespec timerStart, timerEnd;
     
-    // Thread start
+    // Thread timer start
     clock_gettime(CLOCK_MONOTONIC, &timerStart);
     
     printf(" -> Thread %d - Intervalo [%lld, %lld]\n", args->threadId, args->start, args->end);
@@ -21,7 +21,7 @@ void *useThread(void *arg) {
 
     printf("Thread %d terminou - Passos = %lld\n", args->threadId, steps);
 
-    // Thread end
+    // Thread timer end
     clock_gettime(CLOCK_MONOTONIC, &timerEnd);
     args->time = timer(&timerStart, &timerEnd);
 

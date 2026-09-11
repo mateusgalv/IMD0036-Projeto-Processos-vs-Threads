@@ -18,7 +18,7 @@ void solveThreads(
     pthread_t threads[input->w];
     ThreadArgs args[input->w];
 
-    // SOLUÇÃO POR BLOCO
+    // SOLUÇÃO POR BLOCOS
     if (strcmp(input->particao, "bloco") == 0) {
         long long blockSize, blockStart, blockEnd;
         output->length = (input->b - input->a - 1);
@@ -56,9 +56,10 @@ void solveThreads(
     }
 
     for (int j = 0; j < input->w; j ++) {
-        // Espera todas as threads
+        // Espera todas as threads finalizarem
         pthread_join(threads[j], NULL);
     }
+    
     // TIMER DE AGREGAÇÃO START
     clock_gettime(CLOCK_MONOTONIC, &input->aggregationStart);
 

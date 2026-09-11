@@ -20,6 +20,8 @@ void createProcess(
 
     if (pid == 0) {
         // PROCESSO FILHO
+
+        // Process timer start
         clock_gettime(CLOCK_MONOTONIC, &timerStart);
 
         long long steps = 0;
@@ -29,10 +31,11 @@ void createProcess(
 
         printf("Processo filho %d terminou - Passos = %lld\n", processId, steps);
 
+        // Process timer end
         clock_gettime(CLOCK_MONOTONIC, &timerEnd);
-        timer(&timerStart, &timerEnd);
+        long long time = timer(&timerStart, &timerEnd);
 
-        // createTempFile
+        // createTempFile(processId, steps, time);
 
         exit(0);
     } else {
