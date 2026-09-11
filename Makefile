@@ -13,10 +13,10 @@ OUT_DIR = output
 
 # SEQUENCIAL
 # ARGS = 100 200 1
-ARGS = 100007273 8000000000 1
+# ARGS = 100007273 8000000000 1
 
 
-# ARGS = 100007273 8000000000 2 processo bloco processo_bloco_w2
+ARGS = 100007273 8000000000 2 processo bloco processo_bloco_w2
 # ARGS = 100007273 8000000000 4 processo bloco processo_bloco_w4
 # ARGS = 100007273 8000000000 8 processo bloco processo_bloco_w8
 
