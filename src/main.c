@@ -1,28 +1,17 @@
 #define _POSIX_C_SOURCE 199309L
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
-#include <unistd.h>
 #include <time.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <pthread.h>
 
-
-#include "isEven.h"
-#include "stepsCount.h"
-#include "ceilDivision.h"
-#include "intervalCount.h"
-#include "timer.h"
 #include "InputData.h"
 #include "OutputData.h"
-#include "createFile.h"
+#include "timer.h"
 #include "solveSequencial.h"
 #include "solveProcess.h"
 #include "solveThreads.h"
+#include "createFile.h"
 
 // MATRICULA = 007273;
 // A = 100.007.273 -> B = 8.000.000.000
