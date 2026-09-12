@@ -8,7 +8,7 @@ void createFile(
 ){
     char path[32];
 
-    snprintf(path, sizeof(path), "output/%s.txt", fileName);
+    snprintf(path, sizeof(path), "output/%s", fileName);
     
     FILE *file = fopen(path, "w");
     if (file == NULL) return;

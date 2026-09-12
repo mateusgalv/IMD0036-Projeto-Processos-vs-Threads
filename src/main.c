@@ -19,7 +19,7 @@
 */
 int main(int argc, char *argv[]) {
     (void)argc;
-    struct timespec start, end;
+    struct timespec start, end, aggTime;
     InputData input;
     OutputData output;
 
@@ -34,6 +34,15 @@ int main(int argc, char *argv[]) {
 
     if (input.w == 1) {
         solveSequencial(&input, &output);
+
+        strcpy(input.modo, "sequencial");
+        strcpy(output.modo, "sequencial");
+        strcpy(input.particao, "bloco");
+        strcpy(output.particao, "bloco");
+        strcpy(input.fileName, "sequencial.txt");
+        output.maxTime = -1;
+        output.minTime = -1;
+        struct timespec aggTime = {0};
     } else {
         strcpy(input.modo, argv[4]);
         strcpy(output.modo, argv[4]);
@@ -48,13 +57,13 @@ int main(int argc, char *argv[]) {
         solveThreads(&input, &output);
     }
 
+    createFile(&output, input.fileName);
+
     // TIMER END
     clock_gettime(CLOCK_MONOTONIC, &end);
     output.time = timer(&start, &end);
 
     output.aggregationTime = timer(&input.aggregationStart, &end);
-
-    createFile(&output, input.fileName);
 
     // IMPRIME RESULTADO
     printf("\nResultado = {\n");
