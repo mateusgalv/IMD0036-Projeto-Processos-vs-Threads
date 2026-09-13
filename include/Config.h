@@ -4,6 +4,7 @@
 typedef struct {
     long long a;
     long long b;
+    long long length;
     int w;
     char modo[32];
     char particao[32];

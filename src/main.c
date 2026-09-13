@@ -7,6 +7,7 @@
 
 #include "InputData.h"
 #include "OutputData.h"
+#include "Config.h"
 #include "timer.h"
 #include "solveSequencial.h"
 #include "solveProcess.h"
@@ -22,10 +23,14 @@ int main(int argc, char *argv[]) {
     struct timespec start, end, aggTime;
     InputData input;
     OutputData output;
+    Config config;
 
     input.a = strtoll(argv[1], NULL, 10);
+    config.a = strtoll(argv[1], NULL, 10);
     input.b = strtoll(argv[2], NULL, 10);
+    config.b = strtoll(argv[2], NULL, 10);
     input.w = atoi(argv[3]);
+    config.w = atoi(argv[3]);
     output.length = (input.b - input.a + 1);
     output.w = input.w;
     
