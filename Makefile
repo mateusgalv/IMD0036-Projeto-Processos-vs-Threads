@@ -23,7 +23,7 @@ OUT_DIR = output
 
 # ARGS = 100007273 8000000000 2 processo ciclico processo_ciclico_w2.txt
 # ARGS = 100007273 8000000000 4 processo ciclico processo_ciclico_w4.txt
-ARGS = 100007273 8000000000 8 processo ciclico processo_ciclico_w8.txt
+# ARGS = 100007273 8000000000 8 processo ciclico processo_ciclico_w8.txt
 
 
 # ARGS = 100007273 8000000000 2 thread bloco thread_bloco_w2.txt
@@ -33,7 +33,7 @@ ARGS = 100007273 8000000000 8 processo ciclico processo_ciclico_w8.txt
 
 # ARGS = 100007273 8000000000 2 thread ciclico thread_ciclico_w2.txt
 # ARGS = 100007273 8000000000 4 thread ciclico thread_ciclico_w4.txt
-# ARGS = 100007273 8000000000 8 thread ciclico thread_ciclico_w8.txt
+ARGS = 100007273 8000000000 8 thread ciclico thread_ciclico_w8.txt
 
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)
