@@ -21,10 +21,10 @@ void createFile(
         config->particao,
         config->w,
         result->length,
-        (double)((result->totalTime)),
-        (double)((result->maxTime)),
-        (double)((result->minTime)),
-        (double)((result->aggTime))
+        ((double)result->totalTime)/1000000000LL,
+        ((double)result->maxTime)/1000000000LL,
+        ((double)result->minTime)/1000000000LL,
+        ((double)result->aggTime)/1000000000LL
     );
 
     fclose(file);

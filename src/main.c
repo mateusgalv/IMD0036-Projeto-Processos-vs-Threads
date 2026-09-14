@@ -35,13 +35,7 @@ int main(int argc, char *argv[]) {
     clock_gettime(CLOCK_MONOTONIC, &totalTime.start);
 
     if (config.w == 1) {
-        solveSequencial(&config);
-
-        result.maxTime = -1;
-        result.minTime = -1;
-
-        clock_gettime(CLOCK_MONOTONIC, &result.aggregationTime.start);
-        result.aggregationTime.end = result.aggregationTime.start;
+        solveSequencial(&config, &result);
     } else {
         strcpy(config.modo, argv[4]);
         strcpy(config.particao, argv[5]);
@@ -50,14 +44,17 @@ int main(int argc, char *argv[]) {
     
     if (strcmp(config.modo, "processo") == 0) {
         solveProcess(&config, &result);
-    } else if (strcmp(config.modo, "thread") == 0) {
+    } 
+    if (strcmp(config.modo, "thread") == 0) {
         solveThreads(&config, &result);
     }
 
     // TIMER END
     clock_gettime(CLOCK_MONOTONIC, &totalTime.end);
     result.totalTime = elapsedTime(&totalTime.start, &totalTime.end);
-    result.aggTime = elapsedTime(&result.aggregationTime.start, &totalTime.end);
+    if (config.w != 1) {
+        result.aggTime = elapsedTime(&result.aggregationTime.start, &totalTime.end);
+    }
     
     createFile(&config, &result);
     printResult(&config, &result);
