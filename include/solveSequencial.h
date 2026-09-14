@@ -2,12 +2,10 @@
 #define SOLVESEQUENCIAL_H
 
 #include <time.h>
-#include "InputData.h"
-#include "OutputData.h"
+#include "Configs.h"
 
 void solveSequencial(
-    InputData *input,
-    OutputData *output
+    Configs *Configs
 );
 
 #endif

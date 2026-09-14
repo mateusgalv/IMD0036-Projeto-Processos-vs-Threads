@@ -1,12 +1,12 @@
 #ifndef SOLVETHREADS_H
 #define SOLVETHREADS_H
 
-#include "InputData.h"
-#include "OutputData.h"
+#include "Configs.h"
+#include "Results.h"
 
 void solveThreads(
-    InputData *input,
-    OutputData *output
+    Configs *config,
+    Results *result
 );
 
 #endif

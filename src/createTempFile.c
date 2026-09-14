@@ -1,10 +1,7 @@
 #include <stdio.h>
-#include "OutputData.h"
 
-// steps,time
 void createTempFile(
     int processId,
-    long long steps,
     long long time
 ){
     char path[32];
@@ -14,7 +11,7 @@ void createTempFile(
     FILE *file = fopen(path, "w");
     if (file == NULL) return;
     
-    fprintf(file, "%lld,%lld", steps, time);
+    fprintf(file, "%lld", time);
 
     fclose(file);
     return;

@@ -1,7 +1,7 @@
 #include <time.h>
 
 // Retorno em nsec
-long long timer(
+long long elapsedTime(
     struct timespec *start,
     struct timespec *end
 ){
@@ -15,7 +15,5 @@ long long timer(
         nsecs += 1000000000LL;
     }
     
-    long long time = secs * 1000000000LL + nsecs;
-
-    return time;
+    return secs * 1000000000LL + nsecs;
 }

@@ -5,14 +5,16 @@
 #include <string.h>
 #include <time.h>
 
-#include "InputData.h"
-#include "OutputData.h"
-#include "Config.h"
-#include "timer.h"
+#include "Configs.h"
+#include "Results.h"
+#include "Timer.h"
+
+#include "elapsedTime.h"
 #include "solveSequencial.h"
 #include "solveProcess.h"
 #include "solveThreads.h"
 #include "createFile.h"
+#include "printResult.h"
 
 /*
 ./varredor <A> <B> <W> <modo> <particao> <arquivo_saida>
@@ -20,63 +22,45 @@
 */
 int main(int argc, char *argv[]) {
     (void)argc;
-    struct timespec start, end, aggTime;
-    InputData input;
-    OutputData output;
-    Config config;
-
-    input.a = strtoll(argv[1], NULL, 10);
+    Configs config;
+    Results result;
+    Timer totalTime;
+    
     config.a = strtoll(argv[1], NULL, 10);
-    input.b = strtoll(argv[2], NULL, 10);
     config.b = strtoll(argv[2], NULL, 10);
-    input.w = atoi(argv[3]);
     config.w = atoi(argv[3]);
-    output.length = (input.b - input.a + 1);
-    output.w = input.w;
-    
+    result.length = (config.b - config.a + 1);
+
     // TIMER START
-    clock_gettime(CLOCK_MONOTONIC, &start);
+    clock_gettime(CLOCK_MONOTONIC, &totalTime.start);
 
-    if (input.w == 1) {
-        solveSequencial(&input, &output);
+    if (config.w == 1) {
+        solveSequencial(&config);
 
-        strcpy(input.modo, "sequencial");
-        strcpy(output.modo, "sequencial");
-        strcpy(input.particao, "bloco");
-        strcpy(output.particao, "bloco");
-        strcpy(input.fileName, "sequencial.txt");
-        output.maxTime = -1;
-        output.minTime = -1;
-        struct timespec aggTime = {0};
+        result.maxTime = -1;
+        result.minTime = -1;
+
+        clock_gettime(CLOCK_MONOTONIC, &result.aggregationTime.start);
+        result.aggregationTime.end = result.aggregationTime.start;
     } else {
-        strcpy(input.modo, argv[4]);
-        strcpy(output.modo, argv[4]);
-        strcpy(input.particao, argv[5]);
-        strcpy(output.particao, argv[5]);
-        strcpy(input.fileName, argv[6]);
+        strcpy(config.modo, argv[4]);
+        strcpy(config.particao, argv[5]);
+        strcpy(config.fileName, argv[6]);
     }
     
-    if (strcmp(input.modo, "processo") == 0) {
-        solveProcess(&input, &output);
-    } else if (strcmp(input.modo, "thread") == 0) {
-        solveThreads(&input, &output);
+    if (strcmp(config.modo, "processo") == 0) {
+        solveProcess(&config, &result);
+    } else if (strcmp(config.modo, "thread") == 0) {
+        solveThreads(&config, &result);
     }
-
-    createFile(&output, input.fileName);
 
     // TIMER END
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    output.time = timer(&start, &end);
-
-    output.aggregationTime = timer(&input.aggregationStart, &end);
-
-    // IMPRIME RESULTADO
-    printf("\nResultado = {\n");
-    printf("  modo: %s,\n  particao: %s,\n", output.modo, output.particao);
-    printf("  W: %d,\n  L: %lld,\n", output.w, output.length);
-    printf("  tempo (s): %.2e,\n", (double)((output.time)/1000000000LL));
-    printf("  maxTime (s): %.2e,\n", (double)((output.maxTime)/1000000000LL));
-    printf("  minTime (s): %.2e,\n", (double)((output.minTime)/1000000000LL));
-    printf("  aggregationTime (s): %.2e\n}\n", (double)((output.aggregationTime)/1000000000LL));
+    clock_gettime(CLOCK_MONOTONIC, &totalTime.end);
+    result.totalTime = elapsedTime(&totalTime.start, &totalTime.end);
+    result.aggTime = elapsedTime(&result.aggregationTime.start, &totalTime.end);
+    
+    createFile(&config, &result);
+    printResult(&config, &result);
+    
     return 0;
 }

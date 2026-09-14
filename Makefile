@@ -14,11 +14,12 @@ OUT_DIR = output
 # SEQUENCIAL
 # ARGS = 100 200 1
 # ARGS = 100007273 8000000000 1
-
+# ARGS = 1000000000 2100000000 1
 
 # ARGS = 100007273 8000000000 2 processo bloco processo_bloco_w2.txt
 # ARGS = 100007273 8000000000 4 processo bloco processo_bloco_w4.txt
 # ARGS = 100007273 8000000000 8 processo bloco processo_bloco_w8.txt
+ARGS = 100007273 101007273 8 processo bloco teste_processo_bloco_w8.txt
 
 
 # ARGS = 100007273 8000000000 2 processo ciclico processo_ciclico_w2.txt
@@ -33,7 +34,7 @@ OUT_DIR = output
 
 # ARGS = 100007273 8000000000 2 thread ciclico thread_ciclico_w2.txt
 # ARGS = 100007273 8000000000 4 thread ciclico thread_ciclico_w4.txt
-ARGS = 100007273 8000000000 8 thread ciclico thread_ciclico_w8.txt
+# ARGS = 100007273 8000000000 8 thread ciclico thread_ciclico_w8.txt
 
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)

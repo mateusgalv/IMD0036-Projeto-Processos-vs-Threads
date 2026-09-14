@@ -4,65 +4,67 @@
 #include <stdio.h>
 #include <time.h>
 #include <sys/wait.h>
-
-#include "InputData.h"
-#include "OutputData.h"
-#include "createProcess.h"
+#include "Configs.h"
+#include "Results.h"
 #include "ceilDivision.h"
+#include "createProcess.h"
 #include "readTempFiles.h"
 
 void solveProcess(
-    InputData *input,
-    OutputData *output
+    Configs *config,
+    Results *result
 ){
     // SOLUÇÃO POR BLOCO
-    if (strcmp(input->particao, "bloco") == 0) {
-        long long blockSize, blockStart, blockEnd;
-        blockSize = ceilDivision(output->length, input->w);
-        blockStart = input->a;
-        blockEnd = (input->a + blockSize - 1);
+    if (strcmp(config->particao, "bloco") == 0) {
+        long long blockStart, blockEnd, blockSize;
+        long long ceil = config->b;
+        
+        blockSize = ceilDivision(result->length, config->w);
+        blockStart = config->a;
+        blockEnd = (config->a + blockSize - 1);
 
-        printf(" --> Solução por Processos + Blocos - Tamanho dos blocos = %lld\n", blockSize);
+        printf(" ----> Solução por Processos + Blocos\n");
+        printf(" ---> Tamanho dos blocos = %lld\n", blockSize);
 
-        for(int i = 0; i < input->w; i++) {
+        for(int i = 0; i < config->w; i++) {
             createProcess(i, blockStart, blockEnd, 1);
 
             blockStart = blockEnd + 1;
             blockEnd = blockEnd + blockSize;
-            if (blockEnd > input->b) blockEnd = input->b;
+            if (blockEnd > ceil) blockEnd = ceil;
         }        
     }
     // SOLUÇÃO CÍCLICA
-    else if (strcmp(input->particao, "ciclico") == 0) {
-        printf(" --> Solução por Processos + Ciclico, Incremento = %d\n", input->w);
+    else if (strcmp(config->particao, "ciclico") == 0) {
+        printf(" ----> Solução por Processos + Ciclico");
+        printf(" ---> Incremento = %d\n", config->w);
 
-        for (int i = 0; i < input->w; i++) {
-            createProcess(i, input->a + i, input->b, input->w);
+        for (int i = 0; i < config->w; i++) {
+            createProcess(i, config->a + i, config->b, config->w);
         }
     }
 
-    for (int j = 0; j < input->w; j ++) {
-        // Espera todos os filhos
+    // ESPERA TODOS PROCESSOS FILHOS FINALIZAREM
+    for (int j = 0; j < config->w; j ++) {
         wait(NULL);
     }
-
     // TIMER DE AGREGAÇÃO START
-    clock_gettime(CLOCK_MONOTONIC, &input->aggregationStart);
+    clock_gettime(CLOCK_MONOTONIC, &result->aggregationTime.start);
 
-    long long times[input->w];
-    readTempFiles(input->w, times);
+    long long times[config->w];
+    readTempFiles(config->w, times);
+
     long long maxTime = times[0];
     long long minTime = times[0];
-    for (int k = 1; k < input->w; k++) {
+    for (int k = 1; k < config->w; k++) {
         if (times[k] > maxTime) 
             maxTime = times[k];
         if (times[k] < minTime)
             minTime = times[k];
     }
 
-    output->maxTime = maxTime;
-    output->minTime = minTime;
-    printf("maxTime (ns) = %lld, minTime (ns) = %lld\n", maxTime, minTime);
+    result->maxTime = maxTime;
+    result->minTime = minTime;
 
     return;
 }

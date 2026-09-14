@@ -8,8 +8,8 @@ void readTempFiles(int w, long long *times) {
         FILE *file = fopen(path, "r");
         if (file == NULL) return;
 
-        // long long steps;
-        fscanf(file, "%*d,%lld", &times[i]);
+        int n = fscanf(file, "%lld", &times[i]);
+        if (n != 1) printf("Ler arquivo %d falhou", i);
 
         fclose(file);
     }

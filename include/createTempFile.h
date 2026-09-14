@@ -3,7 +3,6 @@
 
 void createTempFile(
     int processId,
-    long long steps,
     long long time
 );
 

@@ -2,27 +2,22 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <time.h>
 #include <stepsCount.h>
-#include <timer.h>
-#include <createFile.h>
-#include "InputData.h"
-#include "OutputData.h"
+#include "Configs.h"
+#include "Timer.h"
 
 void solveSequencial(
-    InputData *input,
-    OutputData *output
+    Configs *config
 ){
     long long steps = 0;
 
-    printf(" --> Execução sequencial (w = 1)\n");
+    printf(" --> Solução sequencial (w = 1)\n");
 
-    for(long long i = input->a; i <= input->b; i++) {
+    for(long long i = config->a; i <= config->b; i++) {
         steps += stepsCount(i);
     }
 
-    struct timespec aggregationTime = {0};
-    input->aggregationStart = aggregationTime;
-   
+    printf(" Passos = %lld\n", steps);
+
     return;
 }

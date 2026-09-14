@@ -1,8 +1,12 @@
 #ifndef CREATEFILE_H
 #define CREATEFILE_H
 
-#include "OutputData.h"
+#include "Configs.h"
+#include "Results.h"
 
-void createFile(OutputData *output, char *fileName);
+void createFile(
+    Configs *config,
+    Results *result
+);
 
 #endif

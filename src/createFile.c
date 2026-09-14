@@ -1,14 +1,15 @@
 #include <stdio.h>
-#include "OutputData.h"
+#include "Configs.h"
+#include "Results.h"
 
 // modo,particao,W,L,tempo_total,tempo_max_filho,tempo_min_filho,tempo_agregacao
 void createFile(
-    OutputData *output,
-    char *fileName
+    Configs *config,
+    Results *result
 ){
-    char path[32];
+    char path[64];
 
-    snprintf(path, sizeof(path), "output/%s", fileName);
+    snprintf(path, sizeof(path), "output/%s", config->fileName);
     
     FILE *file = fopen(path, "w");
     if (file == NULL) return;
@@ -16,14 +17,14 @@ void createFile(
     fprintf(
         file,
         "%s,%s,%d,%lld,%.2e,%.2e,%.2e,%.2e",
-        output->modo,
-        output->particao,
-        output->w,
-        output->length,
-        (double)((output->time)/1000000000LL),
-        (double)((output->maxTime)/1000000000LL),
-        (double)((output->minTime)/1000000000LL),
-        (double)((output->aggregationTime)/1000000000LL)
+        config->modo,
+        config->particao,
+        config->w,
+        result->length,
+        (double)((result->totalTime)),
+        (double)((result->maxTime)),
+        (double)((result->minTime)),
+        (double)((result->aggTime))
     );
 
     fclose(file);

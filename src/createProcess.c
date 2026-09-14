@@ -5,8 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+
+#include "Timer.h"
 #include "stepsCount.h"
-#include "timer.h"
+#include "elapsedTime.h"
 #include "createTempFile.h"
 
 void createProcess(
@@ -15,33 +17,32 @@ void createProcess(
     long long end,
     int increment
 ){
-    struct timespec timerStart, timerEnd;
+    Timer processTime;
 
     pid_t pid = fork();
+    if (pid < 0) {
+        printf("fork %d falhou", processId);
+        exit(1);
+    }
 
-    if (pid == 0) {
-        // PROCESSO FILHO
-
-        // Process timer start
-        clock_gettime(CLOCK_MONOTONIC, &timerStart);
+    if (pid == 0) { // PROCESSO FILHO
+        // TIMER START
+        clock_gettime(CLOCK_MONOTONIC, &processTime.start);
 
         long long steps = 0;
         for (long long i = start; i <= end; i += increment) {
             steps += stepsCount(i);
         }
+        
+        // TIMER END
+        clock_gettime(CLOCK_MONOTONIC, &processTime.end);
+        long long elapsed = elapsedTime(&processTime.start, &processTime.end);
+        printf(" -> Processo filho %d terminou - Passos = %lld | Tempo: %.2e ns\n", processId, steps, (double)elapsed);
 
-        printf("Processo filho %d terminou - Passos = %lld\n", processId, steps);
-
-        // Process timer end
-        clock_gettime(CLOCK_MONOTONIC, &timerEnd);
-        long long time = timer(&timerStart, &timerEnd);
-
-        createTempFile(processId, steps, time);
+        createTempFile(processId, elapsed);
 
         exit(0);
-    } else {
-        // PROCESSO PAI
-        printf(" -> Processo filho %d - Intervalo [%lld, %lld]\n", processId, start, end);
+    } else { // PROCESSO PAI
+        printf(" --> Processo filho %d criado - Intervalo [%lld, %lld]\n", processId, start, end);
     }
-
 }

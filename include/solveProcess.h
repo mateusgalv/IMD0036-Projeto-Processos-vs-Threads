@@ -1,9 +1,12 @@
 #ifndef SOLVEPROCESS_H
 #define SOLVEPROCESS_H
 
-#include "InputData.h"
-#include "OutputData.h"
+#include "Configs.h"
+#include "Results.h"
 
-void solveProcess(InputData *input, OutputData *OutputData); 
+void solveProcess(
+    Configs *config,
+    Results *result
+); 
 
 #endif
