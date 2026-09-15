@@ -13,13 +13,13 @@ OUT_DIR = output
 
 # SEQUENCIAL
 # ARGS = 100 200 1
+# ARGS = 1000000000 1010000000 1
 # ARGS = 100007273 8000000000 1
-ARGS = 1000000000 1010000000 1
 
 # ARGS = 100007273 8000000000 2 processo bloco processo_bloco_w2.txt
-# ARGS = 100007273 8000000000 4 processo bloco processo_bloco_w4.txt
-# ARGS = 100007273 8000000000 8 processo bloco processo_bloco_w8.txt
-ARGS = 100007273 101007273 8 processo bloco teste_processo_bloco_w8.txt
+ARGS = 100007273 8000000000 4 processo bloco processo_bloco_w4_03.txt
+# ARGS = 100007273 8000000000 8 processo bloco processo_bloco_w8_02.txt
+# ARGS = 100007273 101007273 8 processo bloco teste_processo_bloco_w8.txt
 
 
 # ARGS = 100007273 8000000000 2 processo ciclico processo_ciclico_w2.txt

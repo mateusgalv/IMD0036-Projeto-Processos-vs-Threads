@@ -1,3 +1,4 @@
 {
-    "makefile.ConfigsureOnOpen": false
+    "makefile.ConfigsureOnOpen": false,
+    "makefile.configureOnOpen": false
 }
