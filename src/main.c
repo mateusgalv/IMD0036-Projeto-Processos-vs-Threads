@@ -26,16 +26,12 @@ int main(int argc, char *argv[]) {
     Results result;
     Timer totalTime;
 
-    // COMENTARIOS PARA VIDEO:
-    // Timer totalTime pode ser movido para Results
-    // em Results temos um Timer para agg
     
     config.a = strtoll(argv[1], NULL, 10);
     config.b = strtoll(argv[2], NULL, 10);
     config.w = atoi(argv[3]);
     result.length = (config.b - config.a + 1);
-
-    // TIMER START
+    
     clock_gettime(CLOCK_MONOTONIC, &totalTime.start);
 
     if (config.w == 1) {
@@ -53,7 +49,6 @@ int main(int argc, char *argv[]) {
         solveThreads(&config, &result);
     }
 
-    // TIMER END
     clock_gettime(CLOCK_MONOTONIC, &totalTime.end);
     result.totalTime = elapsedTime(&totalTime.start, &totalTime.end);
     if (config.w != 1) {

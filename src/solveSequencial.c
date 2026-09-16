@@ -13,9 +13,8 @@ void solveSequencial(
 ){
     printf(" --> Solução sequencial (w = 1)\n");
 
-    long long steps = 0;
     for(long long i = config->a; i <= config->b; i++) {
-        steps += stepsCount(i);
+        stepsCount(i);
     }
 
     result->maxTime = -1;
@@ -24,7 +23,7 @@ void solveSequencial(
 
     strcpy(config->modo, "sequencial");
     strcpy(config->particao, "bloco");
-    strcpy(config->fileName, "sequencial_03.txt");
+    strcpy(config->fileName, "sequencial.txt");
 
     return;
 }
