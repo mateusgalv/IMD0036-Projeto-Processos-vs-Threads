@@ -10,8 +10,6 @@ temp/
 *.dll
 *.dylib
 
-*.txt
-
 *.exe
 *.out
 *.app
