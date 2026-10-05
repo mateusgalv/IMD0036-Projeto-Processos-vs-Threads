@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
     Results result;
     Timer totalTime;
 
-    
     config.a = strtoll(argv[1], NULL, 10);
     config.b = strtoll(argv[2], NULL, 10);
     config.w = atoi(argv[3]);

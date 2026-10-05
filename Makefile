@@ -9,39 +9,10 @@ BUILD_DIR = build
 TEMP_DIR = temp
 OUT_DIR = output
 
-# A = 100007273 -> B = 8000000000
-
-# SEQUENCIAL
-# ARGS = 100 200 1
-# ARGS = 1000000000 1010000000 1
-# ARGS = 100007273 8000000000 1
-
-# ARGS = 100007273 8000000000 2 processo bloco processo_bloco_w2.txt
-# ARGS = 100007273 8000000000 4 processo bloco processo_bloco_w4.txt
-# ARGS = 100007273 8000000000 8 processo bloco processo_bloco_w8.txt
-# ARGS = 100007273 8000000000 16 processo bloco processo_bloco_w16.txt
-# ARGS = 100007273 8000000000 32 processo bloco processo_bloco_w32.txt
-# ARGS = 100007273 8000000000 64 processo bloco processo_bloco_w64.txt
-
-# ARGS = 100007273 8000000000 2 processo ciclico processo_ciclico_w2.txt
-# ARGS = 100007273 8000000000 4 processo ciclico processo_ciclico_w4.txt
-# ARGS = 100007273 8000000000 8 processo ciclico processo_ciclico_w8.txt
-
-# ARGS = 100007273 8000000000 2 thread bloco thread_bloco_w2.txt
-# ARGS = 100007273 8000000000 4 thread bloco thread_bloco_w4.txt
-# ARGS = 100007273 8000000000 8 thread bloco thread_bloco_w8.txt
-# ARGS = 100007273 8000000000 16 thread bloco thread_bloco_w16.txt
-# ARGS = 100007273 8000000000 32 thread bloco thread_bloco_w32.txt
-# ARGS = 100007273 8000000000 64 thread bloco thread_bloco_w64.txt
-
-# ARGS = 100007273 8000000000 2 thread ciclico thread_ciclico_w2_03.txt
-# ARGS = 100007273 8000000000 4 thread ciclico thread_ciclico_w4.txt
-# ARGS = 100007273 8000000000 8 thread ciclico thread_ciclico_w8.txt
-
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
-default: run
+default: all
 
 all: $(TARGET)
 
@@ -61,4 +32,4 @@ run: all
 clean:
 	@rm -rf $(BUILD_DIR) $(TEMP_DIR) bin
 
-.PHONY: all run clean
+.PHONY: default all run clean
